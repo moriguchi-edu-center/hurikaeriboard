@@ -13,6 +13,11 @@
         #board { background-color: rgba(105, 64, 34, 0.24); background-image: radial-gradient(rgba(255, 236, 190, 0.16) 0.8px, transparent 1px), radial-gradient(rgba(78, 42, 20, 0.14) 0.8px, transparent 1px); background-size: 11px 11px, 17px 17px; border-radius: 18px; padding: 1.5rem; }
         .note:hover { transform: translate(var(--x, 0px), var(--y, 0px)) rotate(0deg) scale(1.05); z-index: 10; }
         .note.is-dragging { cursor: grabbing; transition: none; z-index: 20; }
+        .note-resize-handle { position: absolute; right: 5px; bottom: 5px; width: 16px; height: 16px; cursor: nwse-resize; touch-action: none; z-index: 3; opacity: 0.7; }
+        .note-resize-handle::before, .note-resize-handle::after { content: ''; position: absolute; right: 2px; bottom: 2px; border-right: 2px solid rgba(71, 85, 105, 0.75); border-bottom: 2px solid rgba(71, 85, 105, 0.75); }
+        .note-resize-handle::before { width: 10px; height: 10px; }
+        .note-resize-handle::after { width: 6px; height: 6px; }
+        .note-resize-handle:hover, .note-resize-handle:focus-visible { opacity: 1; outline: 2px solid #f59e0b; outline-offset: 2px; }
     </style>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js" type="text/javascript"></script>
   <script src="https://cdn.tailwindcss.com/3.4.17" type="text/javascript"></script>
@@ -35,16 +40,16 @@
     <div id="json-status" class="rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900" role="status" aria-live="polite">
      学校別データのJSONを書き出し・読み込みができます。
     </div>
-    <div class="flex flex-wrap items-center justify-between gap-3"><span id="count-label" class="shrink-0 text-sm text-gray-600"></span>
-     <div class="flex min-w-0 flex-1 flex-wrap items-center justify-end gap-2">
-      <button data-template-id="randomize-colors-button" class="canva-button shrink-0 px-4 py-2 rounded-lg text-sm font-medium" onclick="randomizeNoteColors()" style="background: rgb(245, 158, 11); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">色をランダムに変更</button> <button data-template-id="copy-button" class="canva-button shrink-0 px-4 py-2 rounded-lg text-sm font-medium" onclick="copyBoardText()" style="background: rgb(14, 165, 233); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">テキストとしてコピー</button> <button data-template-id="download-button" class="canva-button shrink-0 px-4 py-2 rounded-lg text-sm font-medium" onclick="downloadBoardText()" style="background: rgb(22, 163, 74); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">テキスト保存</button> <button data-template-id="json-export-button" class="canva-button shrink-0 px-4 py-2 rounded-lg text-sm font-medium" onclick="exportBoardJson()" style="background: rgb(180, 83, 9); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">保存</button> <label class="flex min-w-0 max-w-full items-center gap-2 text-sm text-gray-700"><span class="shrink-0">項目ごとに保存</span><select id="group-save-field" class="w-40 max-w-full min-w-0 truncate rounded-lg border border-gray-200 bg-white px-2 py-2 text-sm"><option value="">項目を選択</option></select></label> <button data-template-id="group-json-export-button" class="canva-button shrink-0 px-4 py-2 rounded-lg text-sm font-medium" onclick="exportGroupedJson()" style="background: rgb(124, 58, 237); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">項目ごとに保存</button> <button data-template-id="json-import-button" class="canva-button shrink-0 px-4 py-2 rounded-lg text-sm font-medium" onclick="document.getElementById('json-input').click()" style="background: rgb(15, 118, 110); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">読み込み（JSON）</button> <button data-template-id="clear-button" class="canva-button shrink-0 px-4 py-2 rounded-lg text-sm font-medium" onclick="clearBoard()" style="background: rgb(239, 68, 68); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">クリア</button><input id="json-input" type="file" accept="application/json,.json" class="hidden">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+     <span id="count-label" class="shrink-0 text-sm text-gray-600"></span>
+     <div class="flex min-w-0 flex-1 flex-wrap items-center justify-end gap-2"><button data-template-id="randomize-colors-button" class="canva-button shrink-0 px-4 py-2 rounded-lg text-sm font-medium" onclick="randomizeNoteColors()" style="background: rgb(245, 158, 11); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">色をランダムに変更</button> <button data-template-id="copy-button" class="canva-button shrink-0 px-4 py-2 rounded-lg text-sm font-medium" onclick="copyBoardText()" style="background: rgb(14, 165, 233); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">テキストとしてコピー</button> <button data-template-id="download-button" class="canva-button shrink-0 px-4 py-2 rounded-lg text-sm font-medium" onclick="downloadBoardText()" style="background: rgb(22, 163, 74); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">テキスト保存</button> <button data-template-id="json-export-button" class="canva-button shrink-0 px-4 py-2 rounded-lg text-sm font-medium" onclick="exportBoardJson()" style="background: rgb(180, 83, 9); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">保存</button> <label class="flex min-w-0 max-w-full items-center gap-2 text-sm text-gray-700"><span class="shrink-0">項目ごとに保存</span><select id="group-save-field" class="w-40 max-w-full min-w-0 truncate rounded-lg border border-gray-200 bg-white px-2 py-2 text-sm"><option value="">項目を選択</option></select></label> <button data-template-id="group-json-export-button" class="canva-button shrink-0 px-4 py-2 rounded-lg text-sm font-medium" onclick="exportGroupedJson()" style="background: rgb(124, 58, 237); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">項目ごとに保存</button> <button data-template-id="json-import-button" class="canva-button shrink-0 px-4 py-2 rounded-lg text-sm font-medium" onclick="document.getElementById('json-input').click()" style="background: rgb(15, 118, 110); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">読み込み（JSON）</button> <button data-template-id="clear-button" class="canva-button shrink-0 px-4 py-2 rounded-lg text-sm font-medium" onclick="clearBoard()" style="background: rgb(239, 68, 68); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">クリア</button><input id="json-input" type="file" accept="application/json,.json" class="hidden">
      </div>
     </div>
-    <div class="rounded-xl bg-white/70 backdrop-blur p-4 shadow-sm">
-     <label data-template-id="search-label" for="note-search" class="canva-text canva-text block text-sm font-bold text-gray-700" style="color: rgb(55, 65, 81); font-weight: 700; font-style: normal; font-size: 16px;">付箋の内容を検索</label> <input data-template-id="search-input" id="note-search" type="search" class="canva-input mt-2 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-500" autocomplete="off" placeholder="付箋の内容を入力して検索" style="font-weight: 400; font-style: normal; font-size: 16px;">
+    <div class="rounded-xl bg-white/70 backdrop-blur p-4 shadow-sm"><label data-template-id="search-label" for="note-search" class="canva-text canva-text block text-sm font-bold text-gray-700" style="color: rgb(55, 65, 81); font-weight: 700; font-style: normal; font-size: 16px;">付箋の内容を検索</label> <input data-template-id="search-input" id="note-search" type="search" class="canva-input mt-2 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-500" autocomplete="off" placeholder="付箋の内容を入力して検索" style="font-weight: 400; font-style: normal; font-size: 16px;">
     </div>
     <fieldset class="rounded-xl bg-white/70 backdrop-blur p-4 shadow-sm">
-     <div class="flex w-full flex-col items-start gap-3 px-2 py-1 sm:flex-row sm:items-center sm:justify-between"><span data-template-id="field-panel-heading" class="canva-text canva-text font-bold leading-relaxed" style="color: rgb(0, 0, 0); font-weight: 700; font-style: normal; font-size: 16px;">表示する項目を選択</span> <button data-template-id="field-panel-toggle" type="button" class="canva-button rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-500" aria-expanded="true" aria-controls="field-panel" style="background: rgb(255, 255, 255); color: rgb(55, 65, 81); font-weight: 500; font-style: normal; font-size: 16px;">表示項目を開閉</button>
+     <div class="flex w-full flex-col items-start gap-3 px-2 py-1 sm:flex-row sm:items-center sm:justify-between">
+      <span data-template-id="field-panel-heading" class="canva-text canva-text font-bold leading-relaxed" style="color: rgb(0, 0, 0); font-weight: 700; font-style: normal; font-size: 16px;">表示する項目を選択</span> <button data-template-id="field-panel-toggle" type="button" class="canva-button rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-500" aria-expanded="true" aria-controls="field-panel" style="background: rgb(255, 255, 255); color: rgb(55, 65, 81); font-weight: 500; font-style: normal; font-size: 16px;">表示項目を開閉</button>
      </div>
      <div id="field-panel">
       <div id="field-options" class="mt-3 flex flex-wrap gap-3"></div>
@@ -62,7 +67,8 @@
    <div class="w-full max-w-md rounded-2xl bg-white p-5 shadow-2xl">
     <h2 id="group-download-confirm-title" class="text-xl font-bold text-slate-800">項目ごとの保存を確認</h2>
     <p id="group-download-confirm-message" class="mt-4 text-sm leading-relaxed text-slate-700"></p>
-    <div class="mt-5 flex justify-end gap-2"><button id="group-download-cancel" type="button" class="rounded-lg bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200">キャンセル</button> <button id="group-download-continue" type="button" class="rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-700">続行</button>
+    <div class="mt-5 flex justify-end gap-2">
+     <button id="group-download-cancel" type="button" class="rounded-lg bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200">キャンセル</button> <button id="group-download-continue" type="button" class="rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-700">続行</button>
     </div>
    </div>
   </div>
@@ -71,7 +77,8 @@
     <div class="flex items-center justify-between gap-4">
      <h2 data-template-id="preview-modal-title" class="canva-text text-xl font-bold text-slate-800" style="color: rgb(30, 41, 59); font-weight: 700; font-style: normal; font-size: 24px;">内容を確認</h2><button data-template-id="preview-close-button" type="button" class="canva-button rounded-lg px-3 py-1 text-sm text-slate-600 hover:bg-slate-100" onclick="closePreviewModal()" style="color: rgb(71, 85, 105); font-weight: 500; font-style: normal; font-size: 16px;">閉じる</button>
     </div><label data-template-id="preview-content-label" for="preview-content" class="canva-text mt-4 block text-sm font-medium text-slate-600" style="color: rgb(71, 85, 105); font-weight: 500; font-style: normal; font-size: 16px;">実行する内容を確認してください</label> <textarea id="preview-content" class="mt-2 h-64 w-full resize-y rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500" readonly=""></textarea>
-    <div class="mt-4 flex justify-end gap-2"><button data-template-id="preview-cancel-button" type="button" class="canva-button rounded-lg bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200" onclick="closePreviewModal()" style="background: rgb(241, 245, 249); color: rgb(51, 65, 85); font-weight: 500; font-style: normal; font-size: 16px;">キャンセル</button> <button id="preview-action-button" data-template-id="preview-action-button" type="button" class="canva-button rounded-lg bg-sky-500 px-4 py-2 text-sm font-medium text-white hover:bg-sky-600" onclick="executePreviewAction()" style="background: rgb(14, 165, 233); color: rgb(255, 255, 255); font-weight: 600;"></button>
+    <div class="mt-4 flex justify-end gap-2">
+     <button data-template-id="preview-cancel-button" type="button" class="canva-button rounded-lg bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200" onclick="closePreviewModal()" style="background: rgb(241, 245, 249); color: rgb(51, 65, 85); font-weight: 500; font-style: normal; font-size: 16px;">キャンセル</button> <button id="preview-action-button" data-template-id="preview-action-button" type="button" class="canva-button rounded-lg bg-sky-500 px-4 py-2 text-sm font-medium text-white hover:bg-sky-600" onclick="executePreviewAction()" style="background: rgb(14, 165, 233); color: rgb(255, 255, 255); font-weight: 600;"></button>
     </div>
    </div>
   </div>
@@ -119,7 +126,8 @@
             if (allKeys.includes(previous)) groupSaveField.value = previous;
         }
         function notePayload(row, note) {
-            return { data: row, school: String(row['学校'] ?? row['学校名'] ?? '学校未設定'), position: { x: note?.style.getPropertyValue('--x') || '0px', y: note?.style.getPropertyValue('--y') || '0px', rotation: note?.style.getPropertyValue('--rot') || '0deg' }, color: note?.style.background || '' };
+            const size = noteSizes.get(row) || {};
+            return { data: row, school: String(row['学校'] ?? row['学校名'] ?? '学校未設定'), position: { x: note?.style.getPropertyValue('--x') || '0px', y: note?.style.getPropertyValue('--y') || '0px', rotation: note?.style.getPropertyValue('--rot') || '0deg' }, size: { width: Number(size.width) || 0, height: Number(size.height) || 0 }, color: note?.style.background || '' };
         }
         async function exportGroupedJson() {
             const field = groupSaveField.value;
@@ -251,6 +259,7 @@
                             y: notes[i]?.style.getPropertyValue('--y') || '0px',
                             rotation: notes[i]?.style.getPropertyValue('--rot') || '0deg'
                         },
+                        size: { width: noteSizes.get(row)?.width || 0, height: noteSizes.get(row)?.height || 0 },
                         color: notes[i]?.style.background || ''
                     }))
                 };
@@ -290,6 +299,10 @@
                     if (!parsed || parsed.format !== '振り返り付箋ボード' || !Array.isArray(parsed.notes) || parsed.version !== 1) throw new Error('format');
                     const imported = parsed.notes.map(note => note && note.data && typeof note.data === 'object' ? note.data : null);
                     if (imported.some(note => !note)) throw new Error('notes');
+                    parsed.notes.forEach((note, index) => {
+                        const size = note?.size;
+                        if (size && Number.isFinite(Number(size.width)) && Number.isFinite(Number(size.height)) && Number(size.width) >= MIN_NOTE_WIDTH && Number(size.height) >= MIN_NOTE_HEIGHT) noteSizes.set(imported[index], { width: Number(size.width), height: Number(size.height) });
+                    });
                     const rawDisplay = parsed.displayFields ?? parsed.visibleFields;
                     let importedFields = null;
                     if (rawDisplay !== undefined) {
@@ -345,6 +358,9 @@
         let selectedFields = [];
         let activeFilters = {};
         let truncateMarkers = {};
+        const noteSizes = new WeakMap();
+        const MIN_NOTE_WIDTH = 150;
+        const MIN_NOTE_HEIGHT = 120;
 
         function truncateText(title, key) {
             const marker = truncateMarkers[key];
@@ -414,8 +430,20 @@
                 const initialColor = colors[Math.floor(Math.random() * colors.length)];
                 note.className = 'note self-start h-fit p-5 rounded-lg shadow-md';
                 note.style.cssText = `--rot:${rot}deg; --x:0px; --y:0px; background:${initialColor}`;
+                const savedSize = noteSizes.get(row);
+                if (savedSize) { note.style.width = `${savedSize.width}px`; note.style.height = `${savedSize.height}px`; }
+                note.innerHTML = `<div class="note-resize-handle" role="slider" tabindex="0" aria-label="付箋のサイズを変更" aria-valuemin="${MIN_NOTE_WIDTH}" aria-valuemax="1200"></div>` + note.innerHTML;
                 note.addEventListener('pointerdown', startDragging);
-                note.innerHTML = `<div class="mb-3 flex justify-end"><div class="note-color-palette flex gap-1" role="group" aria-label="この付箋の色を変更">${colors.map(color => `<button type="button" class="h-3 w-3 rounded-full border border-white shadow ring-1 ring-gray-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-amber-500" style="background:${color}" data-note-color="${color}" aria-label="${color}"></button>`).join('')}</div></div>${selectedFields.map((key, fieldIndex) => `<p class="${fieldIndex === 0 ? 'text-gray-800 text-base font-medium leading-relaxed mb-2' : 'text-gray-800 text-base font-medium leading-relaxed'}"><span class="font-bold text-xs text-gray-600 tracking-wide">${escHtml(truncateText(key, key))}:</span> <span class="font-medium">${highlightText(String(row[key] ?? ''))}</span></p>`).join('')}`;
+                note.innerHTML = `<div class="note-resize-handle" role="slider" tabindex="0" aria-label="付箋のサイズを変更"></div><div class="mb-3 flex justify-end"><div class="note-color-palette flex gap-1" role="group" aria-label="この付箋の色を変更">${colors.map(color => `<button type="button" class="h-3 w-3 rounded-full border border-white shadow ring-1 ring-gray-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-amber-500" style="background:${color}" data-note-color="${color}" aria-label="${color}"></button>`).join('')}</div></div>${selectedFields.map((key, fieldIndex) => `<p class="${fieldIndex === 0 ? 'text-gray-800 text-base font-medium leading-relaxed mb-2' : 'text-gray-800 text-base font-medium leading-relaxed'}"><span class="font-bold text-xs text-gray-600 tracking-wide">${escHtml(truncateText(key, key))}:</span> <span class="font-medium">${highlightText(String(row[key] ?? ''))}</span></p>`).join('')}`;
+                const resizeHandle = note.querySelector('.note-resize-handle');
+                resizeHandle.addEventListener('pointerdown', e => {
+                    e.preventDefault(); e.stopPropagation();
+                    const startX = e.clientX, startY = e.clientY, startWidth = note.offsetWidth, startHeight = note.offsetHeight;
+                    resizeHandle.setPointerCapture(e.pointerId);
+                    const resize = event => { note.style.width = `${Math.max(MIN_NOTE_WIDTH, startWidth + event.clientX - startX)}px`; note.style.height = `${Math.max(MIN_NOTE_HEIGHT, startHeight + event.clientY - startY)}px`; };
+                    const finish = event => { noteSizes.set(row, { width: note.offsetWidth, height: note.offsetHeight }); resizeHandle.releasePointerCapture(event.pointerId); resizeHandle.removeEventListener('pointermove', resize); resizeHandle.removeEventListener('pointerup', finish); resizeHandle.removeEventListener('pointercancel', finish); };
+                    resizeHandle.addEventListener('pointermove', resize); resizeHandle.addEventListener('pointerup', finish); resizeHandle.addEventListener('pointercancel', finish);
+                });
                 note.querySelector('.note-color-palette').addEventListener('pointerdown', e => e.stopPropagation());
                 note.querySelector('.note-color-palette').addEventListener('click', e => {
                     const button = e.target.closest('[data-note-color]');
