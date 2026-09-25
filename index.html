@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="ja"><head><script>window["__codeletBootstrap__"]=JSON.parse('{"A":"A","B":"20260925-03-18efb3c","C":{"Abril Fatface":"YACgEZbkUVE,0","Alfa Slab One":"YACgEYS9sJU,0","Anton":"YACgEcYqQ-A,0","Archivo":"YACgEZulLoA,0","Arial Narrow":"YAGyDvJ_4Ts,0","Arial Rounded MT Bold":"YAFcfoaHu-s,0","Arial":"YAGyDvJ_4Ts,0","Avenir Next":"YAFcfmNq6UY,0","Baloo 2":"YADK30bC6HQ,0","Bebas Neue":"YACgESME5ew,0","Bricolage Grotesque":"YAFyMcdwzpc,0","Broken Glyph":"YADZ-exUkv0,0","Canva Sans":"YAFdJjTk5UU,1","Caveat":"YALBs2ploWQ,0","Comic Sans MS":"YAFcfvtOAUY,1","Cormorant Garamond":"YAFdJhX-538,0","Courier New":"YAGzXiGs0_8,0","Courier Prime":"YAD1aFjegN8,0","DM Sans":"YAD1aU3sLnI,0","DM Serif Display":"YAD1aYG82rc,0","Forum":"YACgEcnnqB4,0","Fraunces":"YAFdJpU7Kkk,0","Georgia":"YAGzXkO0pEM,0","Ghost Mono":"YAHQutsX00Q,0","Hanken Grotesk":"YAFcfhwp99E,0","Helvetica Neue":"YAFcf6CtJfI,0","Helvetica":"YAFcf6CtJfI,0","IBM Plex Mono":"YAFdJkmvhGI,0","Impact":"YAFcfnjI7Vk,0","Instrument Serif":"YAHFeOnZNEk,0","Inter":"YAFdJvSyp_k,3","Iowan Old Style":"YAGNIFa8j9o,0","Jacques Francois":"YADK3zbC6RM,0","JetBrains Mono":"YAFdJksXcAk,0","Josefin Sans":"YAFdJjvw9Ps,0","Lato":"YAFdJuFCnaw,0","Libre Baskerville":"YACgEUFdPdA,0","Lobster":"YAD8SnSjSFI,0","Lora":"YACgEXvxf8Q,0","Merriweather":"YACgEXvHxxs,0","Montserrat":"YAFdtQi73Xs,0","Nunito":"YAFdJoNRMmU,1","Oleo Script":"YACgEQQ14jI,0","Oswald":"YACgEQY10lw,0","Pacifico":"YADLjORQ1u4,0","Phantom Sans":"YAFdJvgJ5TU,0","Playfair Display":"YAFdJhem5V8,1","Plus Jakarta Sans":"YAGvf3_u0_Q,0","Poppins":"YAFdJjbTu24,1","Press Start 2P":"YAFyGr-8pmQ,0","Quicksand":"YAFdJpYtCxE,1","Raleway":"YAFdJhmxbVQ,1","Roboto Slab":"YAFdJswIKAg,0","Rockwell":"YAFcfyVZnN0,0","Rye":"YACgEdQP21k,0","Segoe UI":"YAHNdRD1Klw,0","Source Sans 3":"YAG4lO1Mj10,0","Source Serif 4":"YACgEfdj394,0","Space Grotesk":"YADZ-dYEmhg,0","Space Mono":"YADW1-vpsoc,0","Times New Roman":"YAGzXW3gftg,0","Times":"YAGzXW3gftg,0","Trebuchet MS":"YAFcfrglpVA,0","UV Display":"YAEdVfSSpYo,0","UV Sans":"YAFdJvgJ5TU,0","Ubuntu":"YACgERDU--Q,0","Verdana":"YAGzXTctYtQ,0","Work Sans":"YAGXhLOKv44,0","Yellowtail":"YACgEYG4kG4,0","ui-monospace":"YAD1aFjegN8,0","ui-sans-serif":"YACkoD1yZN0,0"}}');</script><script src="/_sdk/6542d56fbfe7a3eb.telemetry_sdk.js" integrity="sha512-ECdM0nK7EkwDuOqho2qxgyRQXyBHk9hZqRKMBr+Xsu6zjeHlt+qkO2N2YRiHN7Kg4e1fEHDhjIp4bGJYVypv1g=="></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>振り返り付箋ボード</title>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&amp;family=Zen+Maru+Gothic:wght@400;500;700&amp;display=swap" rel="stylesheet">
+  <style>
+        body { font-family: 'Zen Maru Gothic', 'DM Sans', sans-serif; }
+        body { background-image: radial-gradient(rgba(120, 72, 32, 0.12) 0.7px, transparent 0.9px), radial-gradient(rgba(255, 245, 220, 0.18) 0.8px, transparent 1px); background-size: 9px 9px, 13px 13px; }
+        .note { position: relative; transform: translate(var(--x, 0px), var(--y, 0px)) rotate(var(--rot)); transition: transform 0.2s; cursor: grab; touch-action: none; user-select: none; }
+        .note::before { content: ''; position: absolute; top: -9px; left: 50%; width: 16px; height: 16px; border-radius: 999px; background: radial-gradient(circle at 35% 30%, #ff8b8b 0 12%, #dc2626 30%, #991b1b 78%); border: 2px solid rgba(127, 29, 29, 0.45); box-shadow: 1px 3px 4px rgba(60, 30, 12, 0.35); transform: translateX(-50%); z-index: 2; }
+        #board { background-color: rgba(105, 64, 34, 0.24); background-image: radial-gradient(rgba(255, 236, 190, 0.16) 0.8px, transparent 1px), radial-gradient(rgba(78, 42, 20, 0.14) 0.8px, transparent 1px); background-size: 11px 11px, 17px 17px; border-radius: 18px; padding: 1.5rem; }
+        .note:hover { transform: translate(var(--x, 0px), var(--y, 0px)) rotate(0deg) scale(1.05); z-index: 10; }
+        .note.is-dragging { cursor: grabbing; transition: none; z-index: 20; }
+    </style>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com/3.4.17" type="text/javascript"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.577.0/dist/umd/lucide.min.js" type="text/javascript"></script>
+  <script src="/_sdk/6c2ecc939521f244.data_sdk.js" type="text/javascript" integrity="sha512-gRx8s+XsZDN6mSIQu2sivLZysbV0WHhb5kXNUWlgVb5lCMU1foJYukyMEDPv8Tnoocb8iwqB4XdRrWc7oEGzIQ=="></script>
+  <script src="/_sdk/ef0304cb8c7ed696.editing_sdk.js" type="text/javascript" integrity="sha512-kmL9L5Yuj57MQaequKbMA3aGpT/5lBUp10iGA3e3qnmMLs2ZZQ0poCcIfdd5rTgrhEvNPe4HK0ohePW7ZpgAFg=="></script>
+  <script src="/_sdk/ddcab3e45959c817.resizing_sdk.js" type="text/javascript" integrity="sha512-VAviUKfZVzugWBSeULYjSljTX+nb84wc6Zzbx5GQaQgh6X2ISSjXi8eIiCDGdwDh10esJMY0+QFQgUy9NcrTlQ=="></script>
+ </head>
+ <body data-template-id="__page-root" class="min-h-screen w-full" style="background: radial-gradient(rgb(255, 250, 240), rgb(246, 231, 210));">
+  <header class="p-6 text-center">
+   <h1 data-template-id="page-title" class="canva-text text-3xl font-bold" style="color: rgb(30, 41, 59); font-weight: 700; font-style: normal; font-size: 32px;">振り返り付箋ボード</h1>
+   <p data-template-id="page-subtitle" class="canva-text mt-2" style="color: rgb(100, 116, 139); font-weight: 400; font-style: normal; font-size: 16px;">Excelファイルをアップロードすると、書き込み内容が付箋になります</p>
+  </header>
+  <main class="max-w-6xl mx-auto px-4 pb-12">
+   <div id="upload-area" class="border-2 border-dashed border-gray-400 rounded-xl p-10 text-center cursor-pointer hover:border-amber-500 transition-colors bg-white/60 backdrop-blur">
+    <p data-template-id="upload-label" class="canva-text text-lg font-medium" style="color: rgb(55, 65, 81); font-weight: 500; font-style: normal; font-size: 16px;">ここにファイルをドロップ、またはクリックして選択</p>
+    <p data-template-id="upload-hint" class="canva-text text-sm mt-1 opacity-70" style="color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">.xlsx / .xls / .csv / .json に対応</p><input type="file" id="file-input" accept=".xlsx,.xls,.csv,.json,application/json" class="hidden">
+   </div>
+   <div id="controls" class="hidden mt-4 space-y-4">
+    <div id="json-status" class="rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900" role="status" aria-live="polite">
+     学校別データのJSONを書き出し・読み込みができます。
+    </div>
+    <div class="flex flex-wrap items-center justify-between gap-3"><span id="count-label" class="shrink-0 text-sm text-gray-600"></span>
+     <div class="flex min-w-0 flex-1 flex-wrap items-center justify-end gap-2">
+      <button data-template-id="randomize-colors-button" class="canva-button shrink-0 px-4 py-2 rounded-lg text-sm font-medium" onclick="randomizeNoteColors()" style="background: rgb(245, 158, 11); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">色をランダムに変更</button> <button data-template-id="copy-button" class="canva-button shrink-0 px-4 py-2 rounded-lg text-sm font-medium" onclick="copyBoardText()" style="background: rgb(14, 165, 233); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">テキストとしてコピー</button> <button data-template-id="download-button" class="canva-button shrink-0 px-4 py-2 rounded-lg text-sm font-medium" onclick="downloadBoardText()" style="background: rgb(22, 163, 74); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">テキスト保存</button> <button data-template-id="json-export-button" class="canva-button shrink-0 px-4 py-2 rounded-lg text-sm font-medium" onclick="exportBoardJson()" style="background: rgb(180, 83, 9); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">保存</button> <label class="flex min-w-0 max-w-full items-center gap-2 text-sm text-gray-700"><span class="shrink-0">項目ごとに保存</span><select id="group-save-field" class="w-40 max-w-full min-w-0 truncate rounded-lg border border-gray-200 bg-white px-2 py-2 text-sm"><option value="">項目を選択</option></select></label> <button data-template-id="group-json-export-button" class="canva-button shrink-0 px-4 py-2 rounded-lg text-sm font-medium" onclick="exportGroupedJson()" style="background: rgb(124, 58, 237); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">項目ごとに保存</button> <button data-template-id="json-import-button" class="canva-button shrink-0 px-4 py-2 rounded-lg text-sm font-medium" onclick="document.getElementById('json-input').click()" style="background: rgb(15, 118, 110); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">読み込み（JSON）</button> <button data-template-id="clear-button" class="canva-button shrink-0 px-4 py-2 rounded-lg text-sm font-medium" onclick="clearBoard()" style="background: rgb(239, 68, 68); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">クリア</button><input id="json-input" type="file" accept="application/json,.json" class="hidden">
+     </div>
+    </div>
+    <div class="rounded-xl bg-white/70 backdrop-blur p-4 shadow-sm">
+     <label data-template-id="search-label" for="note-search" class="canva-text canva-text block text-sm font-bold text-gray-700" style="color: rgb(55, 65, 81); font-weight: 700; font-style: normal; font-size: 16px;">付箋の内容を検索</label> <input data-template-id="search-input" id="note-search" type="search" class="canva-input mt-2 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-500" autocomplete="off" placeholder="付箋の内容を入力して検索" style="font-weight: 400; font-style: normal; font-size: 16px;">
+    </div>
+    <fieldset class="rounded-xl bg-white/70 backdrop-blur p-4 shadow-sm">
+     <div class="flex w-full flex-col items-start gap-3 px-2 py-1 sm:flex-row sm:items-center sm:justify-between"><span data-template-id="field-panel-heading" class="canva-text canva-text font-bold leading-relaxed" style="color: rgb(0, 0, 0); font-weight: 700; font-style: normal; font-size: 16px;">表示する項目を選択</span> <button data-template-id="field-panel-toggle" type="button" class="canva-button rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-500" aria-expanded="true" aria-controls="field-panel" style="background: rgb(255, 255, 255); color: rgb(55, 65, 81); font-weight: 500; font-style: normal; font-size: 16px;">表示項目を開閉</button>
+     </div>
+     <div id="field-panel">
+      <div id="field-options" class="mt-3 flex flex-wrap gap-3"></div>
+      <div id="filter-options" class="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+     </div>
+    </fieldset>
+   </div>
+   <section data-template-id="filter-summary" class="canva-banner mt-5 rounded-xl border border-amber-200 px-4 py-3 shadow-sm" aria-live="polite" style="background: rgb(255, 251, 235); color: rgb(120, 53, 15);">
+    <h2 id="filter-summary-heading" class="canva-text text-lg font-bold text-amber-900"></h2>
+    <p id="filter-summary-text" class="canva-text mt-1 text-sm text-amber-800"></p>
+   </section>
+   <div id="board" class="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5"></div>
+  </main>
+  <div id="group-download-confirm-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 p-4" role="dialog" aria-modal="true" aria-labelledby="group-download-confirm-title">
+   <div class="w-full max-w-md rounded-2xl bg-white p-5 shadow-2xl">
+    <h2 id="group-download-confirm-title" class="text-xl font-bold text-slate-800">項目ごとの保存を確認</h2>
+    <p id="group-download-confirm-message" class="mt-4 text-sm leading-relaxed text-slate-700"></p>
+    <div class="mt-5 flex justify-end gap-2"><button id="group-download-cancel" type="button" class="rounded-lg bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200">キャンセル</button> <button id="group-download-continue" type="button" class="rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-700">続行</button>
+    </div>
+   </div>
+  </div>
+  <div id="preview-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 p-4" role="dialog" aria-modal="true" aria-labelledby="preview-modal-title">
+   <div class="w-full max-w-2xl rounded-2xl bg-white p-5 shadow-2xl">
+    <div class="flex items-center justify-between gap-4">
+     <h2 data-template-id="preview-modal-title" class="canva-text text-xl font-bold text-slate-800" style="color: rgb(30, 41, 59); font-weight: 700; font-style: normal; font-size: 24px;">内容を確認</h2><button data-template-id="preview-close-button" type="button" class="canva-button rounded-lg px-3 py-1 text-sm text-slate-600 hover:bg-slate-100" onclick="closePreviewModal()" style="color: rgb(71, 85, 105); font-weight: 500; font-style: normal; font-size: 16px;">閉じる</button>
+    </div><label data-template-id="preview-content-label" for="preview-content" class="canva-text mt-4 block text-sm font-medium text-slate-600" style="color: rgb(71, 85, 105); font-weight: 500; font-style: normal; font-size: 16px;">実行する内容を確認してください</label> <textarea id="preview-content" class="mt-2 h-64 w-full resize-y rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500" readonly=""></textarea>
+    <div class="mt-4 flex justify-end gap-2"><button data-template-id="preview-cancel-button" type="button" class="canva-button rounded-lg bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200" onclick="closePreviewModal()" style="background: rgb(241, 245, 249); color: rgb(51, 65, 85); font-weight: 500; font-style: normal; font-size: 16px;">キャンセル</button> <button id="preview-action-button" data-template-id="preview-action-button" type="button" class="canva-button rounded-lg bg-sky-500 px-4 py-2 text-sm font-medium text-white hover:bg-sky-600" onclick="executePreviewAction()" style="background: rgb(14, 165, 233); color: rgb(255, 255, 255); font-weight: 600;"></button>
+    </div>
+   </div>
+  </div>
+  <script>
+        const colors = ['#FEF3C7','#DCFCE7','#DBEAFE','#FCE7F3','#EDE9FE','#FEE2E2','#CFFAFE','#FEF9C3'];
+        const demoData = [
+            { name: 'あおい', reflection: '友だちと協力して、最後まで発表を完成できました。' },
+            { name: 'はると', reflection: '計算ミスを減らすために、見直しをていねいにしました。' },
+            { name: 'みお', reflection: '分からないところを質問したら、理解できてうれしかったです。' },
+            { name: 'ゆうき', reflection: '次は時間配分を工夫して、もっと早く取り組みたいです。' },
+            { name: 'さくら', reflection: '相手の意見を聞いて、自分の考えを深められました。' },
+            { name: 'りく', reflection: '新しい発見があって、楽しく学習できました。' }
+        ];
+        const uploadArea = document.getElementById('upload-area');
+        const fileInput = document.getElementById('file-input');
+        const board = document.getElementById('board');
+        const fieldPanelToggle = document.querySelector('[data-template-id="field-panel-toggle"]');
+        const fieldPanel = document.getElementById('field-panel');
+        const searchInput = document.getElementById('note-search');
+        let noteSearchQuery = '';
+
+        searchInput.addEventListener('input', () => {
+            noteSearchQuery = searchInput.value.trim().toLowerCase();
+            renderNotes(currentData);
+        });
+
+        fieldPanelToggle.addEventListener('click', () => {
+            const isOpen = fieldPanelToggle.getAttribute('aria-expanded') === 'true';
+            fieldPanelToggle.setAttribute('aria-expanded', String(!isOpen));
+            fieldPanel.classList.toggle('hidden', isOpen);
+        });
+
+        uploadArea.addEventListener('click', () => fileInput.click());
+        uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('border-amber-500'); });
+        uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('border-amber-500'));
+        uploadArea.addEventListener('drop', e => { e.preventDefault(); uploadArea.classList.remove('border-amber-500'); const file = e.dataTransfer.files[0]; if (!file) return; if (file.name.toLowerCase().endsWith('.json') || file.type === 'application/json') readBoardJson(file); else handleFile(file); });
+        fileInput.addEventListener('change', e => { if(e.target.files[0]) { if (e.target.files[0].name.toLowerCase().endsWith('.json') || e.target.files[0].type === 'application/json') readBoardJson(e.target.files[0]); else handleFile(e.target.files[0]); } });
+        const jsonInput = document.getElementById('json-input');
+        const groupSaveField = document.getElementById('group-save-field');
+        let pendingJsonData = null;
+        function updateGroupSaveFields(keys = Object.keys(currentData[0] || {})) {
+            const allKeys = [...new Set([...keys, ...currentData.flatMap(row => Object.keys(row || {}))])];
+            const previous = groupSaveField.value;
+            groupSaveField.innerHTML = '<option value="">項目を選択</option>' + allKeys.map(key => `<option value="${escHtml(key)}">${escHtml(key)}</option>`).join('');
+            if (allKeys.includes(previous)) groupSaveField.value = previous;
+        }
+        function notePayload(row, note) {
+            return { data: row, school: String(row['学校'] ?? row['学校名'] ?? '学校未設定'), position: { x: note?.style.getPropertyValue('--x') || '0px', y: note?.style.getPropertyValue('--y') || '0px', rotation: note?.style.getPropertyValue('--rot') || '0deg' }, color: note?.style.background || '' };
+        }
+        async function exportGroupedJson() {
+            const field = groupSaveField.value;
+            if (!field) { setJsonStatus('項目ごとに保存する項目を選択してください。', true); return; }
+            const rows = currentVisibleRows();
+            if (!rows.length) {
+                await confirmGroupedDownload(field, 0, 0);
+                setJsonStatus(`項目「${field}」の対象付箋は0件でした。ファイルは作成していません。`);
+                return;
+            }
+            const notes = [...board.querySelectorAll('.note')];
+            const grouped = new Map();
+            rows.forEach((row, i) => {
+                const rawValue = row[field];
+                const value = rawValue == null || String(rawValue).trim() === '' ? '未設定' : String(rawValue);
+                if (!grouped.has(value)) grouped.set(value, []);
+                grouped.get(value).push(notePayload(row, notes[i]));
+            });
+            const displayFields = { version: 1, fields: [...new Set([...selectedFields, ...Object.keys(currentData[0] || {})])].map((key, order) => ({ key, label: key, order, visible: selectedFields.includes(key), truncate: truncateMarkers[key] ?? '' })), allFields: [...new Set([...Object.keys(currentData[0] || {}), ...selectedFields])] };
+            const safeFileName = value => {
+                const safe = String(value || '未設定').replace(/[\\\\/:*?"<>|\r\n\u0000-\u001f]/g, '_').trim();
+                return `${safe || '未設定'}.JSON`;
+            };
+            const usedNames = new Set();
+            const uniqueFileName = value => {
+                const base = safeFileName(value).replace(/\.JSON$/, '');
+                let name = `${base}.JSON`, index = 2;
+                while (usedNames.has(name.toLowerCase())) name = `${base}_${index++}.JSON`;
+                usedNames.add(name.toLowerCase());
+                return name;
+            };
+            const confirmed = await confirmGroupedDownload(field, grouped.size, rows.length);
+            if (!confirmed) {
+                setJsonStatus('項目ごとの保存をキャンセルしました。');
+                return;
+            }
+            let downloaded = 0, errors = [];
+            setJsonStatus(`項目「${field}」の${grouped.size}ファイルを準備中…`);
+            for (const [value, items] of grouped.entries()) {
+                try {
+                    const payload = { format: '振り返り付箋ボード', version: 1, exportedAt: new Date().toISOString(), groupBy: { key: field, label: field }, groupValue: value, filters: { ...activeFilters }, search: noteSearchQuery, ui: { highlightMatches: Boolean(noteSearchQuery), searchInputValue: noteSearchQuery }, displayFields, schools: [...new Set(items.map(item => item.school))], notes: items };
+                    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json;charset=utf-8' });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = uniqueFileName(value);
+                    link.style.display = 'none';
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                    setTimeout(() => URL.revokeObjectURL(url), 1000);
+                    downloaded++;
+                    await new Promise(resolve => setTimeout(resolve, 180));
+                } catch (error) {
+                    errors.push(`${value}: ${error?.message || '不明なエラー'}`);
+                }
+            }
+            if (errors.length) setJsonStatus(`項目「${field}」を${downloaded}ファイル保存しました（${rows.length}件）。一部エラー：${errors.join(' ／ ')}`, true);
+            else setJsonStatus(`項目「${field}」を${downloaded}ファイル保存しました（合計${rows.length}件）。複数ダウンロードの許可が必要な場合があります。`);
+        }
+        jsonInput.addEventListener('change', e => { if (e.target.files[0]) readBoardJson(e.target.files[0]); e.target.value = ''; });
+
+        function confirmGroupedDownload(field, fileCount, noteCount) {
+            const modal = document.getElementById('group-download-confirm-modal');
+            const message = document.getElementById('group-download-confirm-message');
+            const cancel = document.getElementById('group-download-cancel');
+            const continueButton = document.getElementById('group-download-continue');
+            message.textContent = fileCount === 0
+                ? `項目「${field}」の対象付箋は0件です。JSONファイルは作成しません。`
+                : `項目「${field}」で、${fileCount}個のJSONファイルをダウンロードします（合計${noteCount}件）。続行しますか？`;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            return new Promise(resolve => {
+                const finish = value => {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                    cancel.removeEventListener('click', onCancel);
+                    continueButton.removeEventListener('click', onContinue);
+                    resolve(value);
+                };
+                const onCancel = () => finish(false);
+                const onContinue = () => finish(fileCount > 0);
+                cancel.addEventListener('click', onCancel);
+                continueButton.addEventListener('click', onContinue);
+                cancel.focus();
+            });
+        }
+
+        function setJsonStatus(message, isError = false) {
+            const status = document.getElementById('json-status');
+            status.textContent = message;
+            status.className = `rounded-lg px-3 py-2 text-sm ${isError ? 'bg-red-50 text-red-800' : 'bg-amber-50 text-amber-900'}`;
+        }
+
+        function currentVisibleRows() {
+            return currentData.filter(row => {
+                const matches = selectedFields.every(key => !activeFilters[key] || String(row[key] ?? '') === activeFilters[key]);
+                const searchable = Object.values(row).map(value => String(value ?? '')).join(' ').toLowerCase();
+                return matches && (!noteSearchQuery || searchable.includes(noteSearchQuery));
+            });
+        }
+
+        function exportBoardJson() {
+            try {
+                const rows = currentVisibleRows();
+                const notes = [...board.querySelectorAll('.note')];
+                const schools = [...new Set(rows.map(row => String(row['学校'] ?? row['学校名'] ?? '学校未設定')))].filter(Boolean);
+                const payload = {
+                    format: '振り返り付箋ボード',
+                    version: 1,
+                    exportedAt: new Date().toISOString(),
+                    filters: { ...activeFilters },
+                    search: noteSearchQuery,
+                    ui: {
+                        highlightMatches: Boolean(noteSearchQuery),
+                        searchInputValue: noteSearchQuery
+                    },
+                    displayFields: {
+                        version: 1,
+                        fields: [...new Set([...selectedFields, ...Object.keys(currentData[0] || {})])].map((key, order) => ({ key, label: key, order, visible: selectedFields.includes(key), truncate: truncateMarkers[key] ?? '' })),
+                        allFields: [...new Set([...Object.keys(currentData[0] || {}), ...selectedFields])]
+                    },
+                    schools,
+                    notes: rows.map((row, i) => ({
+                        data: row,
+                        school: String(row['学校'] ?? row['学校名'] ?? '学校未設定'),
+                        position: {
+                            x: notes[i]?.style.getPropertyValue('--x') || '0px',
+                            y: notes[i]?.style.getPropertyValue('--y') || '0px',
+                            rotation: notes[i]?.style.getPropertyValue('--rot') || '0deg'
+                        },
+                        color: notes[i]?.style.background || ''
+                    }))
+                };
+                const schoolName = schools.length === 1 ? schools[0] : '付箋一覧';
+                const date = new Date().toISOString().slice(0, 10);
+                const json = JSON.stringify(payload, null, 2);
+                const blob = new Blob([json], { type: 'application/json;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `${schoolName}_${date}.json`;
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                setTimeout(() => URL.revokeObjectURL(url), 1000);
+                setJsonStatus(`JSONを書き出しました（${rows.length}件）`);
+            } catch (error) {
+                setJsonStatus(`JSONを書き出せませんでした：${error?.message || '不明なエラー'}`, true);
+            }
+        }
+
+        function readBoardJson(file) {
+            setJsonStatus('JSONを読み込み中…');
+            const reader = new FileReader();
+            reader.onload = () => {
+                try {
+                    const parsed = JSON.parse(reader.result);
+                    const isGrouped = parsed && parsed.format === '振り返り付箋ボード項目別';
+                    if (isGrouped) {
+                        if (parsed.version !== 1 || !parsed.groupBy || typeof parsed.groupBy.key !== 'string' || !Array.isArray(parsed.groups)) throw new Error('groupFormat');
+                        const groupedNotes = parsed.groups.flatMap(group => Array.isArray(group.notes) ? group.notes : []);
+                        if (parsed.groups.some(group => !group || typeof group.value !== 'string' || !Array.isArray(group.notes) || group.notes.some(note => !note || !note.data || typeof note.data !== 'object'))) throw new Error('groups');
+                        parsed.notes = groupedNotes;
+                        parsed.format = '振り返り付箋ボード';
+                    }
+                    if (!parsed || parsed.format !== '振り返り付箋ボード' || !Array.isArray(parsed.notes) || parsed.version !== 1) throw new Error('format');
+                    const imported = parsed.notes.map(note => note && note.data && typeof note.data === 'object' ? note.data : null);
+                    if (imported.some(note => !note)) throw new Error('notes');
+                    const rawDisplay = parsed.displayFields ?? parsed.visibleFields;
+                    let importedFields = null;
+                    if (rawDisplay !== undefined) {
+                        const fieldList = Array.isArray(rawDisplay) ? rawDisplay : rawDisplay?.fields;
+                        if (!Array.isArray(fieldList)) throw new Error('displayFields');
+                        importedFields = fieldList.map((field, order) => {
+                            const key = typeof field === 'string' ? field : field?.key;
+                            if (typeof key !== 'string' || !key.trim()) throw new Error('displayFields');
+                            return { key, order: Number.isFinite(field?.order) ? field.order : order, visible: field?.visible !== false, truncate: typeof field?.truncate === 'string' ? field.truncate : '' };
+                        });
+                    }
+                    const inferredKeys = [...new Set(imported.flatMap(row => Object.keys(row)))];
+                    if (!importedFields) importedFields = inferredKeys.map((key, order) => ({ key, order, visible: true, truncate: '' }));
+                    const visibleImportedKeys = importedFields.filter(field => field.visible).sort((a, b) => a.order - b.order).map(field => field.key);
+                    const importedKeys = [...new Set(visibleImportedKeys.concat(importedFields.length ? [] : inferredKeys))];
+                    const savedFilters = parsed.filters && typeof parsed.filters === 'object' && !Array.isArray(parsed.filters) ? { ...parsed.filters } : {};
+                    const savedSearch = typeof parsed.search === 'string' ? parsed.search : (typeof savedFilters.search === 'string' ? savedFilters.search : '');
+                    delete savedFilters.search;
+                    pendingJsonData = { rows: imported, fields: importedKeys, truncates: Object.fromEntries(importedFields.map(field => [field.key, field.truncate])), filters: savedFilters, search: savedSearch };
+                    applyPendingJson();
+                } catch (error) { pendingJsonData = null; setJsonStatus(error?.message === 'groupFormat' || error?.message === 'groups' ? '項目別JSONを読み込めませんでした。version、groupBy、groups、各グループのnotesを確認してください。' : '読み込めませんでした。不正な形式です。format、version、notes（配列）が必要です。', true); }
+            };
+            reader.onerror = () => setJsonStatus('JSONの読み込みに失敗しました。', true);
+            reader.readAsText(file, 'utf-8');
+        }
+
+        function applyPendingJson() {
+            if (!pendingJsonData) return;
+            const incoming = pendingJsonData.rows;
+            const importedFields = pendingJsonData.fields;
+            currentData = incoming;
+            selectedFields = importedFields;
+            truncateMarkers = pendingJsonData.truncates;
+            activeFilters = pendingJsonData.filters || {};
+            noteSearchQuery = pendingJsonData.search || '';
+            searchInput.value = noteSearchQuery;
+            pendingJsonData = null;
+            renderNotes(currentData);
+            setJsonStatus(`JSONを読み込みました（${incoming.length}件・表示項目${importedFields.length}件）。保存時の絞り込み状態を復元しました。`);
+        }
+
+        function handleFile(file) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                const wb = XLSX.read(e.target.result, {type:'array'});
+                const data = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+                renderNotes(data);
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        let currentData = [];
+        let selectedFields = [];
+        let activeFilters = {};
+        let truncateMarkers = {};
+
+        function truncateText(title, key) {
+            const marker = truncateMarkers[key];
+            return marker ? marker : title;
+        }
+
+        function renderNotes(data) {
+            board.innerHTML = '';
+            currentData = data;
+            updateGroupSaveFields(Object.keys(data[0] || {}));
+            if(!data.length) {
+                document.getElementById('controls').classList.remove('hidden');
+                document.getElementById('count-label').textContent = '0 / 0 件の付箋';
+                document.getElementById('filter-summary-heading').textContent = noteSearchQuery || Object.keys(activeFilters).length ? '保存時の絞り込み条件を復元中' : '絞り込み条件：なし（すべての付箋を表示）';
+                document.getElementById('filter-summary-text').textContent = '0件の付箋を表示中';
+                return;
+            }
+            const keys = Object.keys(data[0]);
+            selectedFields = selectedFields.filter(key => keys.includes(key));
+            if(!selectedFields.length) selectedFields = keys.slice(0, Math.min(2, keys.length));
+            activeFilters = Object.fromEntries(Object.entries(activeFilters).filter(([key]) => selectedFields.includes(key)));
+
+            const options = document.getElementById('field-options');
+            options.innerHTML = keys.map((key, i) => `<div class="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm"><label class="inline-flex items-center gap-2 cursor-pointer"><input type="checkbox" value="${escHtml(key)}" ${selectedFields.includes(key) ? 'checked' : ''} class="field-checkbox accent-amber-600"><span>${escHtml(key)}</span></label><label class="mt-2 flex items-center gap-2 text-xs text-gray-500" for="truncate-${i}">省略文字列<input id="truncate-${i}" type="text" value="${escHtml(truncateMarkers[key] ?? '')}" data-truncate-key="${escHtml(key)}" class="truncate-field w-16 rounded border border-gray-200 px-2 py-1 text-sm text-gray-800"></label></div>`).join('');
+            options.querySelectorAll('.field-checkbox').forEach(box => box.addEventListener('change', () => {
+                selectedFields = [...options.querySelectorAll('.field-checkbox:checked')].map(input => input.value);
+                renderNotes(currentData);
+            }));
+            options.querySelectorAll('.truncate-field').forEach(input => {
+                let composing = false;
+                input.addEventListener('compositionstart', () => { composing = true; });
+                input.addEventListener('compositionend', () => {
+                    composing = false;
+                    truncateMarkers[input.dataset.truncateKey] = input.value;
+                    renderNotes(currentData);
+                });
+                input.addEventListener('input', () => {
+                    truncateMarkers[input.dataset.truncateKey] = input.value;
+                    if (!composing) renderNotes(currentData);
+                });
+            });
+
+            const filterOptions = document.getElementById('filter-options');
+            filterOptions.innerHTML = selectedFields.map(key => {
+                const values = [...new Set(data.map(row => String(row[key] ?? '')))];
+                return `<label class="flex flex-col gap-1 text-xs font-medium text-gray-600">${escHtml(key)}で絞り込み<select data-filter-key="${escHtml(key)}" class="filter-select rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-normal text-gray-800"><option value="">すべて</option>${values.map(value => `<option value="${escHtml(value)}" ${activeFilters[key] === value ? 'selected' : ''}>${escHtml(value || '（空欄）')}</option>`).join('')}</select></label>`;
+            }).join('');
+            filterOptions.querySelectorAll('.filter-select').forEach(select => select.addEventListener('change', () => {
+                const key = select.dataset.filterKey;
+                if (select.value) activeFilters[key] = select.value;
+                else delete activeFilters[key];
+                renderNotes(currentData);
+            }));
+
+            const filteredData = data.filter(row => {
+                const matchesFilters = selectedFields.every(key => !activeFilters[key] || String(row[key] ?? '') === activeFilters[key]);
+                const searchableText = Object.values(row).map(value => String(value ?? '')).join(' ').toLowerCase();
+                return matchesFilters && (!noteSearchQuery || searchableText.includes(noteSearchQuery));
+            });
+            const summaryParts = Object.entries(activeFilters).map(([key, value]) => `${key}：${value || '（空欄）'}`);
+            if (noteSearchQuery) summaryParts.push(`検索：${noteSearchQuery}`);
+            document.getElementById('filter-summary-heading').textContent = summaryParts.length ? summaryParts.join(' ／ ') : '絞り込み条件：なし（すべての付箋を表示）';
+            document.getElementById('filter-summary-text').textContent = `${filteredData.length}件の付箋を表示中`;
+            filteredData.forEach((row, i) => {
+                const note = document.createElement('div');
+                const rot = (Math.random() - 0.5) * 4;
+                const initialColor = colors[Math.floor(Math.random() * colors.length)];
+                note.className = 'note self-start h-fit p-5 rounded-lg shadow-md';
+                note.style.cssText = `--rot:${rot}deg; --x:0px; --y:0px; background:${initialColor}`;
+                note.addEventListener('pointerdown', startDragging);
+                note.innerHTML = `<div class="mb-3 flex justify-end"><div class="note-color-palette flex gap-1" role="group" aria-label="この付箋の色を変更">${colors.map(color => `<button type="button" class="h-3 w-3 rounded-full border border-white shadow ring-1 ring-gray-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-amber-500" style="background:${color}" data-note-color="${color}" aria-label="${color}"></button>`).join('')}</div></div>${selectedFields.map((key, fieldIndex) => `<p class="${fieldIndex === 0 ? 'text-gray-800 text-base font-medium leading-relaxed mb-2' : 'text-gray-800 text-base font-medium leading-relaxed'}"><span class="font-bold text-xs text-gray-600 tracking-wide">${escHtml(truncateText(key, key))}:</span> <span class="font-medium">${highlightText(String(row[key] ?? ''))}</span></p>`).join('')}`;
+                note.querySelector('.note-color-palette').addEventListener('pointerdown', e => e.stopPropagation());
+                note.querySelector('.note-color-palette').addEventListener('click', e => {
+                    const button = e.target.closest('[data-note-color]');
+                    if (button) note.style.background = button.dataset.noteColor;
+                });
+                board.appendChild(note);
+            });
+
+            document.getElementById('controls').classList.remove('hidden');
+            document.getElementById('count-label').textContent = `${filteredData.length} / ${data.length} 件の付箋`;
+        }
+
+        function startDragging(e) {
+            if (e.button !== 0) return;
+            const note = e.currentTarget;
+            const startX = e.clientX;
+            const startY = e.clientY;
+            const initialX = parseFloat(note.style.getPropertyValue('--x')) || 0;
+            const initialY = parseFloat(note.style.getPropertyValue('--y')) || 0;
+            note.classList.add('is-dragging');
+            note.setPointerCapture(e.pointerId);
+
+            const move = event => {
+                note.style.setProperty('--x', `${initialX + event.clientX - startX}px`);
+                note.style.setProperty('--y', `${initialY + event.clientY - startY}px`);
+            };
+            const stop = event => {
+                note.classList.remove('is-dragging');
+                note.releasePointerCapture(event.pointerId);
+                note.removeEventListener('pointermove', move);
+                note.removeEventListener('pointerup', stop);
+                note.removeEventListener('pointercancel', stop);
+            };
+            note.addEventListener('pointermove', move);
+            note.addEventListener('pointerup', stop);
+            note.addEventListener('pointercancel', stop);
+        }
+
+        function randomizeNoteColors() {
+            board.querySelectorAll('.note').forEach(note => {
+                note.style.background = colors[Math.floor(Math.random() * colors.length)];
+            });
+        }
+
+        function getBoardText() {
+            return [...board.querySelectorAll('.note')].map((note, index) => {
+                const lines = [...note.querySelectorAll('p')].map(p => p.textContent.trim());
+                return `付箋 ${index + 1}\n${lines.join('\n')}`;
+            }).join('\n\n');
+        }
+
+        let previewAction = '';
+
+        function openPreviewModal(action) {
+            const text = getBoardText();
+            if (!text) return;
+            previewAction = action;
+            document.getElementById('preview-content').value = text;
+            document.getElementById('preview-action-button').textContent = action === 'copy' ? 'コピーする' : 'テキスト保存する';
+            const modal = document.getElementById('preview-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.getElementById('preview-content').focus();
+        }
+
+        function closePreviewModal() {
+            const modal = document.getElementById('preview-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            previewAction = '';
+        }
+
+        async function executePreviewAction() {
+            const text = document.getElementById('preview-content').value;
+            if (!text || !previewAction) return;
+            if (previewAction === 'copy') {
+                let copied = false;
+                try {
+                    if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+                        await navigator.clipboard.writeText(text);
+                        copied = true;
+                    }
+                } catch (error) {
+                    copied = false;
+                }
+                if (!copied) {
+                    const textarea = document.getElementById('preview-content');
+                    textarea.focus();
+                    textarea.select();
+                    textarea.setSelectionRange(0, textarea.value.length);
+                    try { copied = document.execCommand('copy'); } catch (error) { copied = false; }
+                }
+                document.getElementById('count-label').textContent = copied ? '付箋の内容をコピーしました' : 'コピーできませんでした。内容を選択してコピーしてください';
+                if (copied) closePreviewModal();
+                return;
+            }
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = '振り返り付箋ボード.txt';
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            setTimeout(() => {
+                link.remove();
+                URL.revokeObjectURL(url);
+            }, 1000);
+            closePreviewModal();
+        }
+
+        function copyBoardText() { openPreviewModal('copy'); }
+        function downloadBoardText() { openPreviewModal('download'); }
+
+        function clearBoard() {
+            board.innerHTML = '';
+            document.getElementById('field-options').innerHTML = '';
+            document.getElementById('filter-options').innerHTML = '';
+            document.getElementById('controls').classList.add('hidden');
+            uploadArea.classList.remove('hidden');
+            fileInput.value = '';
+            currentData = [];
+            selectedFields = [];
+            activeFilters = {};
+            truncateMarkers = {};
+            noteSearchQuery = '';
+            searchInput.value = '';
+            document.getElementById('filter-summary-heading').textContent = '';
+            document.getElementById('filter-summary-text').textContent = 'ファイルを読み込むと、絞り込み条件がここに表示されます';
+        }
+
+        function escHtml(s) { const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+
+        function highlightText(value) {
+            const escaped = escHtml(String(value ?? ''));
+            if (!noteSearchQuery) return escaped;
+            const escapedQuery = escHtml(noteSearchQuery).replace(/[.*+?^${}()|[\\]\\]/g, '\\$&');
+            return escaped.replace(new RegExp(`(${escapedQuery})`, 'gi'), '<mark class="rounded bg-amber-300 px-0.5 text-amber-950">$1</mark>');
+        }
+
+        renderNotes(demoData);
+    </script>
+ 
+</body></html>
