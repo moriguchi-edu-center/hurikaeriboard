@@ -95,7 +95,7 @@
   <main class="max-w-6xl mx-auto px-4 pb-12">
    <div id="upload-area" class="border-2 border-dashed border-gray-400 rounded-xl p-10 text-center cursor-pointer hover:border-amber-500 transition-colors bg-white/60 backdrop-blur">
     <p data-template-id="upload-label" class="canva-text text-lg font-medium" style="color: rgb(55, 65, 81); font-weight: 500; font-style: normal; font-size: 16px;">ここにファイルをドロップ、またはクリックして選択</p>
-    <p data-template-id="upload-hint" class="canva-text text-sm mt-1 opacity-70" style="color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">.xlsx / .xls / .csv / .json に対応</p><input type="file" id="file-input" accept=".xlsx,.xls,.csv,.json,application/json" class="hidden">
+    <p data-template-id="upload-hint" class="canva-text text-sm mt-1 opacity-70" style="color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 16px;">.xlsx / .xls / .csv / .json / .txt に対応</p><input type="file" id="file-input" accept=".xlsx,.xls,.csv,.json,.txt,application/json,text/plain" class="hidden">
    </div>
    <div id="controls" class="hidden mt-4 space-y-4">
     <div id="json-status" class="rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900" role="status" aria-live="polite">
@@ -103,7 +103,7 @@
     </div>
     <div class="flex flex-wrap items-center justify-between gap-3">
      <span id="count-label" class="shrink-0 text-sm text-gray-600"></span>
-     <div class="flex min-w-0 flex-1 flex-wrap items-center justify-end gap-2"><button data-template-id="randomize-colors-button" class="canva-button shrink-0 px-4 py-2 rounded-lg text-sm font-medium" onclick="randomizeNoteColors()" style="background: rgb(245, 158, 11); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">色をランダムに変更</button> <button data-template-id="copy-button" class="canva-button shrink-0 px-4 py-2 rounded-lg text-sm font-medium" onclick="copyBoardText()" style="background: rgb(14, 165, 233); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">テキストとしてコピー</button> <button data-template-id="download-button" class="canva-button shrink-0 px-4 py-2 rounded-lg text-sm font-medium" onclick="downloadBoardText()" style="background: rgb(22, 163, 74); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">テキスト保存</button> <button data-template-id="json-export-button" class="canva-button shrink-0 px-4 py-2 rounded-lg text-sm font-medium" onclick="exportBoardJson()" style="background: rgb(180, 83, 9); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">保存</button> <label class="flex min-w-0 max-w-full items-center gap-2 text-sm text-gray-700"><span class="shrink-0">項目ごとに保存</span><select id="group-save-field" class="w-40 max-w-full min-w-0 truncate rounded-lg border border-gray-200 bg-white px-2 py-2 text-sm"><option value="">項目を選択</option></select></label> <button data-template-id="group-json-export-button" class="canva-button shrink-0 px-4 py-2 rounded-lg text-sm font-medium" onclick="exportGroupedJson()" style="background: rgb(124, 58, 237); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">項目ごとに保存</button> <button data-template-id="json-import-button" class="canva-button shrink-0 px-4 py-2 rounded-lg text-sm font-medium" onclick="document.getElementById('json-input').click()" style="background: rgb(15, 118, 110); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">読み込み（JSON）</button> <button data-template-id="clear-button" class="canva-button shrink-0 px-4 py-2 rounded-lg text-sm font-medium" onclick="clearBoard()" style="background: rgb(239, 68, 68); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">クリア</button><input id="json-input" type="file" accept="application/json,.json" class="hidden">
+     <div class="flex min-w-0 flex-1 flex-wrap items-center justify-end gap-2"><button data-template-id="randomize-colors-button" class="canva-button shrink-0 px-4 py-2 rounded-lg text-sm font-medium" onclick="randomizeNoteColors()" style="background: rgb(245, 158, 11); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">色をランダムに変更</button> <button data-template-id="copy-button" class="canva-button shrink-0 px-4 py-2 rounded-lg text-sm font-medium" onclick="copyBoardText()" style="background: rgb(14, 165, 233); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">テキストとしてコピー</button> <button data-template-id="download-button" class="canva-button shrink-0 px-4 py-2 rounded-lg text-sm font-medium" onclick="downloadBoardText()" style="background: rgb(22, 163, 74); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">テキスト保存</button> <button data-template-id="json-export-button" class="canva-button shrink-0 px-4 py-2 rounded-lg text-sm font-medium" onclick="exportBoardJson()" style="background: rgb(180, 83, 9); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">保存</button> <button type="button" id="visible-json-export-button" class="canva-button shrink-0 px-4 py-2 rounded-lg text-sm font-medium" onclick="exportVisibleFieldsJson()" style="background: rgb(154, 52, 18); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">表示項目だけ保存</button> <label class="flex min-w-0 max-w-full items-center gap-2 text-sm text-gray-700"><span class="shrink-0">項目ごとに保存</span><select id="group-save-field" class="w-40 max-w-full min-w-0 truncate rounded-lg border border-gray-200 bg-white px-2 py-2 text-sm"><option value="">項目を選択</option></select></label> <button data-template-id="group-json-export-button" class="canva-button shrink-0 px-4 py-2 rounded-lg text-sm font-medium" onclick="exportGroupedJson()" style="background: rgb(124, 58, 237); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">項目ごとに保存</button> <button data-template-id="json-import-button" class="canva-button shrink-0 px-4 py-2 rounded-lg text-sm font-medium" onclick="document.getElementById('json-input').click()" style="background: rgb(15, 118, 110); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">読み込み（JSON / TXT）</button> <button data-template-id="clear-button" class="canva-button shrink-0 px-4 py-2 rounded-lg text-sm font-medium" onclick="clearBoard()" style="background: rgb(239, 68, 68); color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">クリア</button><input id="json-input" type="file" accept="application/json,.json,.txt,text/plain" class="hidden">
      </div>
     </div>
     <div class="rounded-xl bg-white/70 backdrop-blur p-4 shadow-sm"><label data-template-id="search-label" for="note-search" class="canva-text canva-text block text-sm font-bold text-gray-700" style="color: rgb(55, 65, 81); font-weight: 700; font-style: normal; font-size: 16px;">付箋の内容を検索</label> <input data-template-id="search-input" id="note-search" type="search" class="canva-input mt-2 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-500" autocomplete="off" placeholder="付箋の内容を入力して検索" style="font-weight: 400; font-style: normal; font-size: 16px;">
@@ -254,8 +254,14 @@
         uploadArea.addEventListener('click', () => fileInput.click());
         uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('border-amber-500'); });
         uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('border-amber-500'));
-        uploadArea.addEventListener('drop', e => { e.preventDefault(); uploadArea.classList.remove('border-amber-500'); const file = e.dataTransfer.files[0]; if (!file) return; if (file.name.toLowerCase().endsWith('.json') || file.type === 'application/json') readBoardJson(file); else handleFile(file); });
-        fileInput.addEventListener('change', e => { if(e.target.files[0]) { if (e.target.files[0].name.toLowerCase().endsWith('.json') || e.target.files[0].type === 'application/json') readBoardJson(e.target.files[0]); else handleFile(e.target.files[0]); } });
+        function openDataFile(file) {
+            const name = String(file?.name || '').toLowerCase();
+            if (name.endsWith('.json') || file?.type === 'application/json') readBoardJson(file);
+            else if (name.endsWith('.txt')) readBoardText(file);
+            else handleFile(file);
+        }
+        uploadArea.addEventListener('drop', e => { e.preventDefault(); uploadArea.classList.remove('border-amber-500'); const file = e.dataTransfer.files[0]; if (file) openDataFile(file); });
+        fileInput.addEventListener('change', e => { if (e.target.files[0]) openDataFile(e.target.files[0]); });
         const jsonInput = document.getElementById('json-input');
         const groupSaveField = document.getElementById('group-save-field');
         let pendingJsonData = null;
@@ -328,7 +334,7 @@
             if (errors.length) setJsonStatus(`項目「${field}」を${downloaded}ファイル保存しました（${rows.length}件）。一部エラー：${errors.join(' ／ ')}`, true);
             else setJsonStatus(`項目「${field}」を${downloaded}ファイル保存しました（合計${rows.length}件）。複数ダウンロードの許可が必要な場合があります。`);
         }
-        jsonInput.addEventListener('change', e => { if (e.target.files[0]) readBoardJson(e.target.files[0]); e.target.value = ''; });
+        jsonInput.addEventListener('change', e => { if (e.target.files[0]) openDataFile(e.target.files[0]); e.target.value = ''; });
 
         function confirmGroupedDownload(field, fileCount, noteCount) {
             const modal = document.getElementById('group-download-confirm-modal');
@@ -471,12 +477,19 @@
             });
         }
 
-        function exportBoardJson() {
-            try {
-                const rows = currentVisibleRows();
-                const notes = rows.map(row => noteByRow.get(row));
-                const schools = [...new Set(rows.map(row => String(row['学校'] ?? row['学校名'] ?? '学校未設定')))].filter(Boolean);
-                const payload = {
+        function createBoardExportPayload(onlyVisibleFields) {
+            const rows = currentVisibleRows();
+            const notes = rows.map(row => noteByRow.get(row));
+            const visibleSchoolField = ['学校', '学校名'].find(key => selectedFields.includes(key)) || '';
+            const includeSchool = !onlyVisibleFields || Boolean(visibleSchoolField);
+            const schoolNameOf = row => includeSchool ? String((onlyVisibleFields ? row[visibleSchoolField] : (row['学校'] ?? row['学校名'])) ?? '').trim() : '';
+            const schools = includeSchool ? [...new Set(rows.map(schoolNameOf))].filter(Boolean) : [];
+            const fieldKeys = onlyVisibleFields ? selectedFields.slice() : [...new Set([...selectedFields, ...Object.keys(currentData[0] || {})])];
+            const allFields = onlyVisibleFields ? selectedFields.slice() : [...new Set([...Object.keys(currentData[0] || {}), ...selectedFields])];
+            return {
+                rows,
+                schools,
+                payload: {
                     format: '振り返り付箋ボード',
                     version: 1,
                     exportedAt: new Date().toISOString(),
@@ -485,36 +498,64 @@
                     ui: boardUiState(),
                     displayFields: {
                         version: 1,
-                        fields: [...new Set([...selectedFields, ...Object.keys(currentData[0] || {})])].map((key, order) => ({ key, label: key, order, visible: selectedFields.includes(key), truncate: truncateMarkers[key] ?? '' })),
-                        allFields: [...new Set([...Object.keys(currentData[0] || {}), ...selectedFields])]
+                        fields: fieldKeys.map((key, order) => ({ key, label: key, order, visible: onlyVisibleFields || selectedFields.includes(key), truncate: truncateMarkers[key] ?? '' })),
+                        allFields
                     },
-                    schools,
-                    notes: rows.map((row, i) => ({
-                        data: row,
-                        school: String(row['学校'] ?? row['学校名'] ?? '学校未設定'),
-                        position: {
-                            x: notes[i]?.style.getPropertyValue('--x') || '0px',
-                            y: notes[i]?.style.getPropertyValue('--y') || '0px',
-                            rotation: notes[i]?.style.getPropertyValue('--rot') || '0deg'
-                        },
-                        size: { width: noteSizes.get(row)?.width || 0, height: noteSizes.get(row)?.height || 0 },
-                        color: notes[i]?.style.background || ''
-                    }))
-                };
+                    ...(includeSchool ? { schools } : {}),
+                    notes: rows.map((row, i) => {
+                        const note = {
+                            data: onlyVisibleFields ? Object.fromEntries(selectedFields.map(key => [key, row[key] ?? ''])) : row,
+                            position: {
+                                x: notes[i]?.style.getPropertyValue('--x') || '0px',
+                                y: notes[i]?.style.getPropertyValue('--y') || '0px',
+                                rotation: notes[i]?.style.getPropertyValue('--rot') || '0deg'
+                            },
+                            size: { width: noteSizes.get(row)?.width || 0, height: noteSizes.get(row)?.height || 0 },
+                            color: notes[i]?.style.background || ''
+                        };
+                        if (includeSchool) note.school = schoolNameOf(row) || '学校未設定';
+                        return note;
+                    })
+                }
+            };
+        }
+
+        function downloadJsonFile(payload, filename) {
+            const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }
+
+        function exportBoardJson() {
+            try {
+                const { rows, schools, payload } = createBoardExportPayload(false);
                 const schoolName = schools.length === 1 ? schools[0] : '付箋一覧';
                 const date = new Date().toISOString().slice(0, 10);
-                const json = JSON.stringify(payload, null, 2);
-                const blob = new Blob([json], { type: 'application/json;charset=utf-8' });
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = `${schoolName}_${date}.json`;
-                link.style.display = 'none';
-                document.body.appendChild(link);
-                link.click();
-                link.remove();
-                setTimeout(() => URL.revokeObjectURL(url), 1000);
+                downloadJsonFile(payload, `${schoolName}_${date}.json`);
                 setJsonStatus(`JSONを書き出しました（${rows.length}件）`);
+            } catch (error) {
+                setJsonStatus(`JSONを書き出せませんでした：${error?.message || '不明なエラー'}`, true);
+            }
+        }
+
+        function exportVisibleFieldsJson() {
+            try {
+                if (!selectedFields.length) {
+                    setJsonStatus('表示する項目を1つ以上選んでください。', true);
+                    return;
+                }
+                const { rows, schools, payload } = createBoardExportPayload(true);
+                const schoolName = schools.length === 1 ? schools[0] : '付箋一覧';
+                const date = new Date().toISOString().slice(0, 10);
+                downloadJsonFile(payload, `${schoolName}_${date}_表示項目.json`);
+                setJsonStatus(`表示中の項目だけJSONを書き出しました（${rows.length}件・${selectedFields.length}項目）`);
             } catch (error) {
                 setJsonStatus(`JSONを書き出せませんでした：${error?.message || '不明なエラー'}`, true);
             }
@@ -591,6 +632,84 @@
             pendingJsonData = null;
             renderNotes(currentData);
             setJsonStatus(`JSONを読み込みました（${incoming.length}件・表示項目${importedFields.length}件）。保存時の絞り込み状態を復元しました。`);
+        }
+
+        function parseBoardText(text) {
+            const normalized = String(text || '').replace(/^\uFEFF/, '').replace(/\r\n/g, '\n').replace(/\r/g, '\n').trim();
+            if (!normalized) return [];
+            const notes = [];
+            let row = null;
+            let currentKey = '';
+            let afterBlank = true;
+            const finish = () => {
+                if (!row) return;
+                Object.keys(row).forEach(key => {
+                    row[key] = String(row[key]).replace(/^\n+|\n+$/g, '').trim();
+                    if (!row[key]) delete row[key];
+                });
+                if (Object.keys(row).length) notes.push(row);
+                row = null;
+                currentKey = '';
+            };
+            normalized.split('\n').forEach(raw => {
+                const trimmed = raw.trim();
+                if (!trimmed) {
+                    afterBlank = true;
+                    if (currentKey && row && row[currentKey] && !String(row[currentKey]).endsWith('\n')) row[currentKey] += '\n';
+                    return;
+                }
+                if (/^分類(?:\s|$)/.test(trimmed)) {
+                    finish();
+                    afterBlank = true;
+                    return;
+                }
+                if (/^付箋\s*\d+$/.test(trimmed) || (/^\d+$/.test(trimmed) && (afterBlank || !row))) {
+                    finish();
+                    row = {};
+                    afterBlank = false;
+                    return;
+                }
+                if (!row) row = {};
+                const match = trimmed.match(/^([^:：\n]{1,120}?)[:：]\s?(.*)$/);
+                const key = match ? match[1].trim() : '';
+                if (match && key && !/^\d+$/.test(key)) {
+                    currentKey = key;
+                    const value = match[2];
+                    row[currentKey] = row[currentKey] ? `${String(row[currentKey]).replace(/\n+$/, '')}\n${value}` : value;
+                } else if (currentKey) {
+                    const prev = String(row[currentKey] || '');
+                    row[currentKey] = prev ? `${prev.replace(/\n$/, '')}\n${trimmed}` : trimmed;
+                } else {
+                    row['内容'] = row['内容'] ? `${row['内容']}\n${trimmed}` : trimmed;
+                }
+                afterBlank = false;
+            });
+            finish();
+            return notes;
+        }
+
+        function readBoardText(file) {
+            setJsonStatus('テキストを読み込み中…');
+            const reader = new FileReader();
+            reader.onload = () => {
+                try {
+                    const rows = parseBoardText(reader.result);
+                    if (!rows.length) throw new Error('empty');
+                    activeFilters = {};
+                    noteSearchQuery = '';
+                    searchInput.value = '';
+                    truncateMarkers = {};
+                    const keys = [];
+                    rows.forEach(row => Object.keys(row).forEach(key => { if (!keys.includes(key)) keys.push(key); }));
+                    selectedFields = keys;
+                    renderNotes(rows, { preserveFields: true });
+                    setJsonStatus(`テキストを読み込みました（${rows.length}件・項目${keys.length}件）。`);
+                } catch (error) {
+                    setJsonStatus('テキストを読み込めませんでした。保存した付箋のテキスト形式を確認してください。', true);
+                }
+            };
+            reader.onerror = () => setJsonStatus('テキストの読み込みに失敗しました。', true);
+            reader.readAsText(file, 'utf-8');
         }
 
         function handleFile(file) {
@@ -1192,7 +1311,7 @@
                 if (!element.classList.contains('note')) return '';
                 noteIndex += 1;
                 const lines = [...element.querySelectorAll('p')].map(p => p.textContent.trim());
-                return `付箋 ${noteIndex}\n${lines.join('\n')}`;
+                return `${noteIndex}\n${lines.join('\n')}`;
             }).filter(Boolean).join('\n\n');
         }
 
