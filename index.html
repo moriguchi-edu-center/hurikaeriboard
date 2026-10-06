@@ -9,8 +9,17 @@
         body { font-family: 'Zen Maru Gothic', 'DM Sans', sans-serif; }
         body { background-image: radial-gradient(rgba(120, 72, 32, 0.12) 0.7px, transparent 0.9px), radial-gradient(rgba(255, 245, 220, 0.18) 0.8px, transparent 1px); background-size: 9px 9px, 13px 13px; }
         .note { position: relative; transform: translate(var(--x, 0px), var(--y, 0px)) rotate(var(--rot)); transition: transform 0.2s; cursor: grab; touch-action: none; user-select: none; }
-        .note::before { content: ''; position: absolute; top: -9px; left: 50%; width: 16px; height: 16px; border-radius: 999px; background: radial-gradient(circle at 35% 30%, #ff8b8b 0 12%, #dc2626 30%, #991b1b 78%); border: 2px solid rgba(127, 29, 29, 0.45); box-shadow: 1px 3px 4px rgba(60, 30, 12, 0.35); transform: translateX(-50%); z-index: 2; }
+        .note::before { content: ''; position: absolute; top: -9px; left: 50%; width: 16px; height: 16px; border-radius: 999px; background: radial-gradient(circle at 32% 28%, #fff7f8 0 12%, #fecdd3 28%, #fb7185 62%, #f43f5e 100%); border: 2px solid rgba(251, 113, 133, 0.55); box-shadow: 0 2px 3px rgba(190, 80, 100, 0.22); transform: translateX(-50%); z-index: 2; }
+        html[data-pin="blue"] .note::before { background: radial-gradient(circle at 32% 28%, #ffffff 0 12%, #bae6fd 28%, #7dd3fc 62%, #38bdf8 100%); border-color: rgba(56, 189, 248, 0.65); box-shadow: 0 2px 3px rgba(56, 140, 190, 0.22); }
+        html[data-pin="yellow"] .note::before { background: radial-gradient(circle at 32% 28%, #fffef8 0 12%, #fef9c3 28%, #fde047 62%, #facc15 100%); border-color: rgba(250, 204, 21, 0.75); box-shadow: 0 2px 3px rgba(180, 140, 20, 0.2); }
+        html[data-pin="green"] .note::before { background: radial-gradient(circle at 32% 28%, #f7fef9 0 12%, #bbf7d0 28%, #86efac 62%, #4ade80 100%); border-color: rgba(74, 222, 128, 0.7); box-shadow: 0 2px 3px rgba(40, 140, 80, 0.2); }
+        html[data-pin="white"] .note::before { background: radial-gradient(circle at 32% 28%, #ffffff 0 16%, #fff1f2 48%, #fecdd3 100%); border-color: rgba(251, 207, 232, 0.95); box-shadow: 0 2px 3px rgba(180, 120, 140, 0.18); }
+        html[data-pin="black"] .note::before { background: radial-gradient(circle at 32% 28%, #faf5ff 0 12%, #e9d5ff 28%, #c4b5fd 62%, #a78bfa 100%); border-color: rgba(167, 139, 250, 0.65); box-shadow: 0 2px 3px rgba(120, 80, 180, 0.2); }
+        html.has-pin-image .note::before { width: 40px; height: 40px; top: -18px; border: none; border-radius: 0; background: var(--pin-image) center / contain no-repeat; box-shadow: none; }
+        .pin-style-button { width: 1.25rem; height: 1.25rem; border-radius: 999px; border: 2px solid rgba(255, 255, 255, 0.9); box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25); }
+        .pin-style-button[aria-pressed="true"] { outline: 2px solid #f59e0b; outline-offset: 2px; }
         #board { background-color: rgba(105, 64, 34, 0.24); background-image: radial-gradient(rgba(255, 236, 190, 0.16) 0.8px, transparent 1px), radial-gradient(rgba(78, 42, 20, 0.14) 0.8px, transparent 1px); background-size: 11px 11px, 17px 17px; border-radius: 18px; padding: 1.5rem; }
+        #board.has-board-image { background-color: #c4a574; background-image: var(--board-image); background-size: cover; background-position: center; background-repeat: no-repeat; }
         .note:hover { transform: translate(var(--x, 0px), var(--y, 0px)) rotate(0deg) scale(1.05); z-index: 10; }
         .note.is-dragging { cursor: grabbing; transition: none; z-index: 20; }
         .note-resize-handle { position: absolute; right: 5px; bottom: 5px; width: 16px; height: 16px; cursor: nwse-resize; touch-action: none; z-index: 3; opacity: 0.7; }
@@ -18,6 +27,58 @@
         .note-resize-handle::before { width: 10px; height: 10px; }
         .note-resize-handle::after { width: 6px; height: 6px; }
         .note-resize-handle:hover, .note-resize-handle:focus-visible { opacity: 1; outline: 2px solid #f59e0b; outline-offset: 2px; }
+        .board-label { position: relative; justify-self: start; width: max-content; max-width: none; transform: translate(var(--x, 0px), var(--y, 0px)) rotate(var(--rot)); transition: transform 0.2s; cursor: grab; touch-action: none; user-select: none; border-width: 3px; border-style: solid; }
+        .board-label.is-full-width { grid-column: 1 / -1; justify-self: stretch; width: 100%; max-width: 100%; }
+        .board-label.is-full-width > p { min-width: 0; width: 100%; }
+        .board-label.is-full-width .label-title { flex: 1; min-width: 0; }
+        .board-label:hover { transform: translate(var(--x, 0px), var(--y, 0px)) rotate(0deg) scale(1.05); z-index: 10; }
+        .board-label.is-dragging { cursor: grabbing; transition: none; z-index: 20; }
+        .label-swatch { width: 0.9rem; height: 0.9rem; border-radius: 999px; border: 2px solid #fff; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.18); flex: none; }
+        .label-title { cursor: pointer; white-space: pre-wrap; overflow-wrap: break-word; }
+        .label-title.is-editing { cursor: text; user-select: text; -webkit-user-select: text; outline: 2px solid #f59e0b; outline-offset: 2px; min-width: 1.5em; }
+        .board-label:has(.label-title.is-editing) { cursor: text; touch-action: auto; }
+        .board-label > p { align-items: flex-start; width: max-content; }
+        .board-label[style*="width"] { min-width: 0; max-width: none; }
+        .board-label[style*="width"] > p { min-width: 0; width: 100%; }
+        .board-label[style*="width"] .label-title { min-width: 0; }
+        .label-font-controls { display: none; }
+        .board-label.is-font-open .label-font-controls { display: flex; }
+        @media print {
+            @page { margin: 10mm; }
+            body { background: white !important; }
+            header { padding: 0 0 8px !important; }
+            header h1 { font-size: 18px !important; }
+            header p, #upload-area, #controls, #group-download-confirm-modal, #preview-modal, .note-color-palette, .note-resize-handle, .label-toolbar { display: none !important; }
+            main { max-width: none !important; padding: 0 !important; }
+            [data-template-id="filter-summary"], #color-legend, #board, .note, .board-label { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            #board {
+                display: flex !important;
+                flex-wrap: wrap !important;
+                align-items: flex-start !important;
+                align-content: flex-start !important;
+                justify-content: flex-start !important;
+                gap: 1.25rem !important;
+                width: auto !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 12px 8px 8px !important;
+            }
+            .note::before { top: 6px; }
+            html.has-pin-image .note::before { top: -10px; }
+            .note, .note:hover, .board-label {
+                position: relative !important;
+                transform: none !important;
+                flex: none !important;
+                width: var(--print-w) !important;
+                height: var(--print-h) !important;
+                max-width: none !important;
+                min-width: 0 !important;
+                margin: 0 !important;
+                break-inside: avoid;
+                page-break-inside: avoid;
+                box-shadow: none !important;
+            }
+        }
     </style>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js" type="text/javascript"></script>
   <script src="https://cdn.tailwindcss.com/3.4.17" type="text/javascript"></script>
@@ -47,6 +108,28 @@
     </div>
     <div class="rounded-xl bg-white/70 backdrop-blur p-4 shadow-sm"><label data-template-id="search-label" for="note-search" class="canva-text canva-text block text-sm font-bold text-gray-700" style="color: rgb(55, 65, 81); font-weight: 700; font-style: normal; font-size: 16px;">付箋の内容を検索</label> <input data-template-id="search-input" id="note-search" type="search" class="canva-input mt-2 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-500" autocomplete="off" placeholder="付箋の内容を入力して検索" style="font-weight: 400; font-style: normal; font-size: 16px;">
     </div>
+    <div class="rounded-xl bg-white/70 backdrop-blur p-4 shadow-sm">
+     <div class="flex flex-wrap items-center gap-4">
+      <label for="color-by-field" class="flex min-w-0 flex-wrap items-center gap-2 text-sm font-bold text-gray-700">色分けする観点 <select id="color-by-field" class="w-64 max-w-full min-w-0 truncate rounded-lg border border-gray-200 bg-white px-2 py-2 text-sm font-normal text-gray-800"><option value="">色分けしない</option></select></label>
+      <label class="inline-flex items-center gap-2 text-sm font-medium text-gray-700"><input id="show-field-names" type="checkbox" checked class="accent-amber-600">付箋に項目名を表示</label>
+      <label class="inline-flex items-center gap-2 text-sm font-medium text-gray-700"><input id="show-category-labels" type="checkbox" class="accent-amber-600" disabled>ボードに分類ラベルを表示</label>
+      <button type="button" id="board-image-button" class="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700">背景画像を選ぶ</button>
+      <button type="button" id="board-image-clear" class="hidden rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700">背景画像を消す</button>
+      <input id="board-image-input" type="file" accept="image/*" class="hidden">
+      <div id="pin-style-options" class="inline-flex items-center gap-1.5" role="group" aria-label="初期のピン">
+       <span class="text-sm font-medium text-gray-700">初期のピン</span>
+       <button type="button" class="pin-style-button" data-pin-style="red" aria-label="いちごのピン" aria-pressed="true" style="background:#fb7185"></button>
+       <button type="button" class="pin-style-button" data-pin-style="blue" aria-label="そらのピン" aria-pressed="false" style="background:#7dd3fc"></button>
+       <button type="button" class="pin-style-button" data-pin-style="yellow" aria-label="レモンのピン" aria-pressed="false" style="background:#fde047"></button>
+       <button type="button" class="pin-style-button" data-pin-style="green" aria-label="ミントのピン" aria-pressed="false" style="background:#86efac"></button>
+       <button type="button" class="pin-style-button" data-pin-style="white" aria-label="パールのピン" aria-pressed="false" style="background:#fff1f2"></button>
+       <button type="button" class="pin-style-button" data-pin-style="black" aria-label="ぶどうのピン" aria-pressed="false" style="background:#c4b5fd"></button>
+      </div>
+      <button type="button" id="pin-image-button" class="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700">ピン画像を選ぶ</button>
+      <button type="button" id="pin-reset" class="hidden rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700">初期のピンに戻す</button>
+      <input id="pin-image-input" type="file" accept="image/*" class="hidden">
+     </div>
+    </div>
     <fieldset class="rounded-xl bg-white/70 backdrop-blur p-4 shadow-sm">
      <div class="flex w-full flex-col items-start gap-3 px-2 py-1 sm:flex-row sm:items-center sm:justify-between">
       <span data-template-id="field-panel-heading" class="canva-text canva-text font-bold leading-relaxed" style="color: rgb(0, 0, 0); font-weight: 700; font-style: normal; font-size: 16px;">表示する項目を選択</span> <button data-template-id="field-panel-toggle" type="button" class="canva-button rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-500" aria-expanded="true" aria-controls="field-panel" style="background: rgb(255, 255, 255); color: rgb(55, 65, 81); font-weight: 500; font-style: normal; font-size: 16px;">表示項目を開閉</button>
@@ -61,6 +144,7 @@
     <h2 id="filter-summary-heading" class="canva-text text-lg font-bold text-amber-900"></h2>
     <p id="filter-summary-text" class="canva-text mt-1 text-sm text-amber-800"></p>
    </section>
+   <div id="color-legend" class="mt-4 hidden flex-wrap items-center gap-2" aria-label="色分けの凡例"></div>
    <div id="board" class="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5"></div>
   </main>
   <div id="group-download-confirm-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 p-4" role="dialog" aria-modal="true" aria-labelledby="group-download-confirm-title">
@@ -98,11 +182,67 @@
         const fieldPanelToggle = document.querySelector('[data-template-id="field-panel-toggle"]');
         const fieldPanel = document.getElementById('field-panel');
         const searchInput = document.getElementById('note-search');
+        const colorBySelect = document.getElementById('color-by-field');
+        const showFieldNamesInput = document.getElementById('show-field-names');
+        const categoryLabelInput = document.getElementById('show-category-labels');
         let noteSearchQuery = '';
+        let colorByField = '';
+        let showFieldNames = true;
+        let showCategoryLabels = false;
+        let boardImage = '';
+        let pinImage = '';
+        let pinStyle = 'red';
+        const PIN_STYLES = ['red', 'blue', 'yellow', 'green', 'white', 'black'];
+        let colorByOffset = 0;
 
         searchInput.addEventListener('input', () => {
             noteSearchQuery = searchInput.value.trim().toLowerCase();
-            renderNotes(currentData);
+            renderNotes(currentData, { preserveFields: true });
+        });
+        colorBySelect.addEventListener('change', () => {
+            colorByField = decodeFieldKey(colorBySelect.value);
+            colorByOffset = 0;
+            renderNotes(currentData, { preserveFields: true });
+        });
+        showFieldNamesInput.addEventListener('change', () => {
+            showFieldNames = showFieldNamesInput.checked;
+            renderNotes(currentData, { preserveFields: true });
+        });
+        categoryLabelInput.addEventListener('change', () => {
+            showCategoryLabels = categoryLabelInput.checked;
+            renderNotes(currentData, { preserveFields: true });
+        });
+        const boardImageInput = document.getElementById('board-image-input');
+        document.getElementById('board-image-button').addEventListener('click', () => boardImageInput.click());
+        boardImageInput.addEventListener('change', () => {
+            const file = boardImageInput.files && boardImageInput.files[0];
+            boardImageInput.value = '';
+            if (file) loadBoardImageFile(file);
+        });
+        document.getElementById('board-image-clear').addEventListener('click', () => {
+            applyBoardImage('');
+            setJsonStatus('ボードの背景画像を消しました。');
+        });
+        const pinImageInput = document.getElementById('pin-image-input');
+        document.getElementById('pin-image-button').addEventListener('click', () => pinImageInput.click());
+        pinImageInput.addEventListener('change', () => {
+            const file = pinImageInput.files && pinImageInput.files[0];
+            pinImageInput.value = '';
+            if (file) loadPinImageFile(file);
+        });
+        document.getElementById('pin-style-options').addEventListener('click', event => {
+            const button = event.target.closest('[data-pin-style]');
+            if (!button) return;
+            selectBuiltinPin(button.dataset.pinStyle);
+            setJsonStatus('初期のピンに切り替えました。');
+        });
+        document.getElementById('pin-reset').addEventListener('click', () => {
+            selectBuiltinPin('red');
+            setJsonStatus('初期のピンに戻しました。');
+        });
+        document.addEventListener('click', event => {
+            if (event.target.closest('.label-font-controls') || event.target.closest('.label-title')) return;
+            document.querySelectorAll('.board-label.is-font-open').forEach(label => label.classList.remove('is-font-open'));
         });
 
         fieldPanelToggle.addEventListener('click', () => {
@@ -121,16 +261,16 @@
         let pendingJsonData = null;
         function updateGroupSaveFields(keys = Object.keys(currentData[0] || {})) {
             const allKeys = [...new Set([...keys, ...currentData.flatMap(row => Object.keys(row || {}))])];
-            const previous = groupSaveField.value;
-            groupSaveField.innerHTML = '<option value="">項目を選択</option>' + allKeys.map(key => `<option value="${escHtml(key)}">${escHtml(key)}</option>`).join('');
-            if (allKeys.includes(previous)) groupSaveField.value = previous;
+            const previous = decodeFieldKey(groupSaveField.value);
+            groupSaveField.innerHTML = '<option value="">項目を選択</option>' + allKeys.map(key => `<option value="${encodeFieldKey(key)}">${escHtml(key)}</option>`).join('');
+            if (allKeys.includes(previous)) groupSaveField.value = encodeFieldKey(previous);
         }
         function notePayload(row, note) {
             const size = noteSizes.get(row) || {};
             return { data: row, school: String(row['学校'] ?? row['学校名'] ?? '学校未設定'), position: { x: note?.style.getPropertyValue('--x') || '0px', y: note?.style.getPropertyValue('--y') || '0px', rotation: note?.style.getPropertyValue('--rot') || '0deg' }, size: { width: Number(size.width) || 0, height: Number(size.height) || 0 }, color: note?.style.background || '' };
         }
         async function exportGroupedJson() {
-            const field = groupSaveField.value;
+            const field = decodeFieldKey(groupSaveField.value);
             if (!field) { setJsonStatus('項目ごとに保存する項目を選択してください。', true); return; }
             const rows = currentVisibleRows();
             if (!rows.length) {
@@ -138,7 +278,7 @@
                 setJsonStatus(`項目「${field}」の対象付箋は0件でした。ファイルは作成していません。`);
                 return;
             }
-            const notes = [...board.querySelectorAll('.note')];
+            const notes = rows.map(row => noteByRow.get(row));
             const grouped = new Map();
             rows.forEach((row, i) => {
                 const rawValue = row[field];
@@ -168,7 +308,7 @@
             setJsonStatus(`項目「${field}」の${grouped.size}ファイルを準備中…`);
             for (const [value, items] of grouped.entries()) {
                 try {
-                    const payload = { format: '振り返り付箋ボード', version: 1, exportedAt: new Date().toISOString(), groupBy: { key: field, label: field }, groupValue: value, filters: { ...activeFilters }, search: noteSearchQuery, ui: { highlightMatches: Boolean(noteSearchQuery), searchInputValue: noteSearchQuery }, displayFields, schools: [...new Set(items.map(item => item.school))], notes: items };
+                    const payload = { format: '振り返り付箋ボード', version: 1, exportedAt: new Date().toISOString(), groupBy: { key: field, label: field }, groupValue: value, filters: { ...activeFilters }, search: noteSearchQuery, ui: boardUiState(), displayFields, schools: [...new Set(items.map(item => item.school))], notes: items };
                     const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json;charset=utf-8' });
                     const url = URL.createObjectURL(blob);
                     const link = document.createElement('a');
@@ -216,6 +356,108 @@
             });
         }
 
+        function boardUiState() {
+            return { highlightMatches: Boolean(noteSearchQuery), searchInputValue: noteSearchQuery, colorByField, showFieldNames, showCategoryLabels, categoryLabels: categoryLabelExport(), boardImage, pinImage, pinStyle };
+        }
+
+        function applyBoardImage(dataUrl) {
+            boardImage = typeof dataUrl === 'string' && dataUrl.startsWith('data:image/') ? dataUrl : '';
+            if (boardImage) {
+                board.style.setProperty('--board-image', `url("${boardImage}")`);
+                board.classList.add('has-board-image');
+            } else {
+                board.style.removeProperty('--board-image');
+                board.classList.remove('has-board-image');
+            }
+            document.getElementById('board-image-clear').classList.toggle('hidden', !boardImage);
+        }
+
+        function syncPinControls() {
+            const reset = document.getElementById('pin-reset');
+            if (reset) reset.classList.toggle('hidden', !pinImage && pinStyle === 'red');
+            document.querySelectorAll('[data-pin-style]').forEach(button => {
+                button.setAttribute('aria-pressed', String(!pinImage && button.dataset.pinStyle === pinStyle));
+            });
+        }
+
+        function applyPinStyle(style) {
+            pinStyle = PIN_STYLES.includes(style) ? style : 'red';
+            document.documentElement.dataset.pin = pinStyle;
+            syncPinControls();
+        }
+
+        function selectBuiltinPin(style) {
+            applyPinImage('');
+            applyPinStyle(style);
+        }
+
+        function applyPinImage(dataUrl) {
+            pinImage = typeof dataUrl === 'string' && dataUrl.startsWith('data:image/') ? dataUrl : '';
+            if (pinImage) {
+                document.documentElement.style.setProperty('--pin-image', `url("${pinImage}")`);
+                document.documentElement.classList.add('has-pin-image');
+            } else {
+                document.documentElement.style.removeProperty('--pin-image');
+                document.documentElement.classList.remove('has-pin-image');
+            }
+            syncPinControls();
+        }
+
+        function loadPinImageFile(file) {
+            if (!file || !String(file.type || '').startsWith('image/')) {
+                setJsonStatus('画像ファイルを選んでください。', true);
+                return;
+            }
+            const objectUrl = URL.createObjectURL(file);
+            const image = new Image();
+            image.onload = () => {
+                const maxEdge = 256;
+                const scale = Math.min(1, maxEdge / Math.max(image.width, image.height));
+                const canvas = document.createElement('canvas');
+                canvas.width = Math.max(1, Math.round(image.width * scale));
+                canvas.height = Math.max(1, Math.round(image.height * scale));
+                const context = canvas.getContext('2d');
+                context.drawImage(image, 0, 0, canvas.width, canvas.height);
+                URL.revokeObjectURL(objectUrl);
+                const keepAlpha = file.type === 'image/png' || file.type === 'image/webp' || file.type === 'image/gif';
+                applyPinImage(canvas.toDataURL(keepAlpha ? 'image/png' : 'image/jpeg', 0.85));
+                setJsonStatus('付箋のピン画像を設定しました。');
+            };
+            image.onerror = () => {
+                URL.revokeObjectURL(objectUrl);
+                setJsonStatus('画像を読み込めませんでした。', true);
+            };
+            image.src = objectUrl;
+        }
+
+        function loadBoardImageFile(file) {
+            if (!file || !String(file.type || '').startsWith('image/')) {
+                setJsonStatus('画像ファイルを選んでください。', true);
+                return;
+            }
+            const objectUrl = URL.createObjectURL(file);
+            const image = new Image();
+            image.onload = () => {
+                const maxEdge = 1600;
+                const scale = Math.min(1, maxEdge / Math.max(image.width, image.height));
+                const canvas = document.createElement('canvas');
+                canvas.width = Math.max(1, Math.round(image.width * scale));
+                canvas.height = Math.max(1, Math.round(image.height * scale));
+                const context = canvas.getContext('2d');
+                context.fillStyle = '#e7d3b0';
+                context.fillRect(0, 0, canvas.width, canvas.height);
+                context.drawImage(image, 0, 0, canvas.width, canvas.height);
+                URL.revokeObjectURL(objectUrl);
+                applyBoardImage(canvas.toDataURL('image/jpeg', 0.85));
+                setJsonStatus('ボードの背景画像を設定しました。');
+            };
+            image.onerror = () => {
+                URL.revokeObjectURL(objectUrl);
+                setJsonStatus('画像を読み込めませんでした。', true);
+            };
+            image.src = objectUrl;
+        }
+
         function setJsonStatus(message, isError = false) {
             const status = document.getElementById('json-status');
             status.textContent = message;
@@ -224,16 +466,15 @@
 
         function currentVisibleRows() {
             return currentData.filter(row => {
-                const matches = selectedFields.every(key => !activeFilters[key] || String(row[key] ?? '') === activeFilters[key]);
                 const searchable = Object.values(row).map(value => String(value ?? '')).join(' ').toLowerCase();
-                return matches && (!noteSearchQuery || searchable.includes(noteSearchQuery));
+                return rowMatchesActiveFilters(row) && (!noteSearchQuery || searchable.includes(noteSearchQuery));
             });
         }
 
         function exportBoardJson() {
             try {
                 const rows = currentVisibleRows();
-                const notes = [...board.querySelectorAll('.note')];
+                const notes = rows.map(row => noteByRow.get(row));
                 const schools = [...new Set(rows.map(row => String(row['学校'] ?? row['学校名'] ?? '学校未設定')))].filter(Boolean);
                 const payload = {
                     format: '振り返り付箋ボード',
@@ -241,10 +482,7 @@
                     exportedAt: new Date().toISOString(),
                     filters: { ...activeFilters },
                     search: noteSearchQuery,
-                    ui: {
-                        highlightMatches: Boolean(noteSearchQuery),
-                        searchInputValue: noteSearchQuery
-                    },
+                    ui: boardUiState(),
                     displayFields: {
                         version: 1,
                         fields: [...new Set([...selectedFields, ...Object.keys(currentData[0] || {})])].map((key, order) => ({ key, label: key, order, visible: selectedFields.includes(key), truncate: truncateMarkers[key] ?? '' })),
@@ -321,7 +559,8 @@
                     const savedFilters = parsed.filters && typeof parsed.filters === 'object' && !Array.isArray(parsed.filters) ? { ...parsed.filters } : {};
                     const savedSearch = typeof parsed.search === 'string' ? parsed.search : (typeof savedFilters.search === 'string' ? savedFilters.search : '');
                     delete savedFilters.search;
-                    pendingJsonData = { rows: imported, fields: importedKeys, truncates: Object.fromEntries(importedFields.map(field => [field.key, field.truncate])), filters: savedFilters, search: savedSearch };
+                    const savedUi = parsed.ui && typeof parsed.ui === 'object' ? parsed.ui : {};
+                    pendingJsonData = { rows: imported, fields: importedKeys, truncates: Object.fromEntries(importedFields.map(field => [field.key, field.truncate])), filters: savedFilters, search: savedSearch, colorByField: typeof savedUi.colorByField === 'string' ? savedUi.colorByField : '', showFieldNames: savedUi.showFieldNames !== false, showCategoryLabels: savedUi.showCategoryLabels === true, categoryLabels: Array.isArray(savedUi.categoryLabels) ? savedUi.categoryLabels : [], boardImage: typeof savedUi.boardImage === 'string' ? savedUi.boardImage : '', pinImage: typeof savedUi.pinImage === 'string' ? savedUi.pinImage : '', pinStyle: typeof savedUi.pinStyle === 'string' ? savedUi.pinStyle : 'red' };
                     applyPendingJson();
                 } catch (error) { pendingJsonData = null; setJsonStatus(error?.message === 'groupFormat' || error?.message === 'groups' ? '項目別JSONを読み込めませんでした。version、groupBy、groups、各グループのnotesを確認してください。' : '読み込めませんでした。不正な形式です。format、version、notes（配列）が必要です。', true); }
             };
@@ -338,7 +577,17 @@
             truncateMarkers = pendingJsonData.truncates;
             activeFilters = pendingJsonData.filters || {};
             noteSearchQuery = pendingJsonData.search || '';
+            colorByField = pendingJsonData.colorByField || '';
+            showFieldNames = pendingJsonData.showFieldNames !== false;
+            showCategoryLabels = pendingJsonData.showCategoryLabels === true;
+            restoreCategoryLabels(pendingJsonData.categoryLabels);
+            applyBoardImage(pendingJsonData.boardImage);
+            applyPinStyle(pendingJsonData.pinStyle);
+            applyPinImage(pendingJsonData.pinImage);
+            colorByOffset = 0;
             searchInput.value = noteSearchQuery;
+            document.getElementById('show-field-names').checked = showFieldNames;
+            categoryLabelInput.checked = showCategoryLabels;
             pendingJsonData = null;
             renderNotes(currentData);
             setJsonStatus(`JSONを読み込みました（${incoming.length}件・表示項目${importedFields.length}件）。保存時の絞り込み状態を復元しました。`);
@@ -359,6 +608,8 @@
         let activeFilters = {};
         let truncateMarkers = {};
         const noteSizes = new WeakMap();
+        const noteByRow = new WeakMap();
+        const labelStates = new Map();
         const MIN_NOTE_WIDTH = 150;
         const MIN_NOTE_HEIGHT = 120;
 
@@ -367,7 +618,367 @@
             return marker ? marker : title;
         }
 
-        function renderNotes(data) {
+        function colorForViewpoint(index, total) {
+            if (total <= colors.length) return colors[(index + colorByOffset) % colors.length];
+            const hue = Math.round(((index + colorByOffset) * 360) / total) % 360;
+            return `hsl(${hue} 72% 86%)`;
+        }
+
+        function viewpointColorMap(rows, key) {
+            const values = [...new Set(rows.map(row => String(row[key] ?? '')))].sort((a, b) => a.localeCompare(b, 'ja'));
+            return new Map(values.map((value, index) => [value, colorForViewpoint(index, values.length)]));
+        }
+
+        function labelStateKey(value) {
+            return `${colorByField}\0${value}`;
+        }
+
+        function categoryLabelExport() {
+            return [...labelStates.entries()].map(([key, state]) => {
+                const splitAt = key.indexOf('\0');
+                const item = { field: key.slice(0, splitAt), value: key.slice(splitAt + 1), x: state.x, y: state.y, width: state.width, height: state.height, color: state.color, fontSize: state.fontSize || 0 };
+                if (typeof state.text === 'string') item.text = state.text;
+                return item;
+            });
+        }
+
+        function restoreCategoryLabels(items) {
+            labelStates.clear();
+            (items || []).forEach(item => {
+                if (!item || typeof item.field !== 'string' || typeof item.value !== 'string') return;
+                const state = { x: typeof item.x === 'string' ? item.x : '0px', y: typeof item.y === 'string' ? item.y : '0px', width: Number(item.width) || 0, height: Number(item.height) || 0, color: typeof item.color === 'string' ? item.color : '', fontSize: Number(item.fontSize) || 0 };
+                if (typeof item.text === 'string') state.text = item.text;
+                labelStates.set(`${item.field}\0${item.value}`, state);
+            });
+        }
+
+        function parseCssColor(input) {
+            const text = String(input || '').trim();
+            const hex = text.match(/^#([0-9a-f]{6})$/i);
+            if (hex) {
+                const value = parseInt(hex[1], 16);
+                return { r: (value >> 16) & 255, g: (value >> 8) & 255, b: value & 255 };
+            }
+            const rgb = text.match(/^rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)/i);
+            if (rgb) return { r: Number(rgb[1]), g: Number(rgb[2]), b: Number(rgb[3]) };
+            const hsl = text.match(/^hsl\(\s*([\d.]+)[\s,]+([\d.]+)%[\s,]+([\d.]+)%/i);
+            if (!hsl) return null;
+            const h = Number(hsl[1]) / 360;
+            const s = Number(hsl[2]) / 100;
+            const l = Number(hsl[3]) / 100;
+            if (s === 0) { const gray = Math.round(l * 255); return { r: gray, g: gray, b: gray }; }
+            const hueToRgb = (p, q, t) => { if (t < 0) t += 1; if (t > 1) t -= 1; if (t < 1 / 6) return p + (q - p) * 6 * t; if (t < 1 / 2) return q; if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6; return p; };
+            const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+            const p = 2 * l - q;
+            return { r: Math.round(hueToRgb(p, q, h + 1 / 3) * 255), g: Math.round(hueToRgb(p, q, h) * 255), b: Math.round(hueToRgb(p, q, h - 1 / 3) * 255) };
+        }
+
+        function rgbToHsl(r, g, b) {
+            r /= 255; g /= 255; b /= 255;
+            const max = Math.max(r, g, b);
+            const min = Math.min(r, g, b);
+            const l = (max + min) / 2;
+            if (max === min) return { h: 0, s: 0, l };
+            const d = max - min;
+            const s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+            let h = max === r ? (g - b) / d + (g < b ? 6 : 0) : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
+            return { h: h * 60, s, l };
+        }
+
+        function headingStyle(noteColor) {
+            const rgb = parseCssColor(noteColor);
+            if (!rgb) return { background: '#fff7ed', color: '#9a3412', borderColor: '#fb923c' };
+            if (rgb.r >= 250 && rgb.g >= 250 && rgb.b >= 250) return { background: '#ffffff', color: '#3f3f46', borderColor: '#a1a1aa' };
+            const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+            const hue = Math.round(hsl.h);
+            const saturation = Math.min(94, Math.max(62, Math.round(hsl.s * 100)));
+            return {
+                background: `hsl(${hue} ${saturation}% 84%)`,
+                color: `hsl(${hue} ${Math.min(90, saturation)}% 30%)`,
+                borderColor: `hsl(${hue} ${saturation}% 52%)`
+            };
+        }
+
+        const LABEL_FONT_MIN = 20;
+        const LABEL_FONT_MAX = 128;
+        const LABEL_FONT_DEFAULT = 32;
+
+        function applyLabelFontSize(label, size) {
+            const next = Math.min(LABEL_FONT_MAX, Math.max(LABEL_FONT_MIN, Math.round(Number(size) || LABEL_FONT_DEFAULT)));
+            const title = label.querySelector('.label-title');
+            if (title) title.style.fontSize = `${next}px`;
+            const swatch = label.querySelector('.label-swatch');
+            if (swatch) {
+                const dot = Math.max(14, Math.round(next * 0.42));
+                swatch.style.width = `${dot}px`;
+                swatch.style.height = `${dot}px`;
+            }
+            label.dataset.fontSize = String(next);
+            const smaller = label.querySelector('[data-font-step="-8"]');
+            const larger = label.querySelector('[data-font-step="8"]');
+            if (smaller) smaller.disabled = next <= LABEL_FONT_MIN;
+            if (larger) larger.disabled = next >= LABEL_FONT_MAX;
+        }
+
+        function applyHeadingColor(label, noteColor) {
+            const style = headingStyle(noteColor);
+            label.style.background = style.background;
+            label.style.color = style.color;
+            label.style.borderColor = style.borderColor;
+            label.dataset.baseColor = noteColor;
+            const swatch = label.querySelector('.label-swatch');
+            if (swatch) swatch.style.background = noteColor;
+        }
+
+        function rememberLabelLayout(label) {
+            const value = decodeFieldKey(label.dataset.labelValue || '');
+            const original = value || '（空欄）';
+            const shown = (label.querySelector('.label-title')?.textContent || '').replace(/\r\n/g, '\n');
+            const state = {
+                x: label.style.getPropertyValue('--x') || '0px',
+                y: label.style.getPropertyValue('--y') || '0px',
+                width: label.style.width ? label.offsetWidth : 0,
+                height: label.style.height ? label.offsetHeight : 0,
+                color: label.dataset.baseColor || '',
+                fontSize: Number(label.dataset.fontSize) || 32
+            };
+            if (shown !== original) state.text = shown;
+            labelStates.set(labelStateKey(value), state);
+        }
+
+        function insertPlainText(text) {
+            const selection = window.getSelection();
+            if (!selection || !selection.rangeCount) return;
+            const range = selection.getRangeAt(0);
+            range.deleteContents();
+            const node = document.createTextNode(text);
+            range.insertNode(node);
+            range.setStartAfter(node);
+            range.collapse(true);
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+
+        function beginLabelEdit(label, title) {
+            label.classList.remove('is-font-open');
+            title.contentEditable = 'true';
+            title.classList.add('is-editing');
+            title.focus();
+            const range = document.createRange();
+            range.selectNodeContents(title);
+            range.collapse(false);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+
+        function finishLabelEdit(label, title) {
+            if (!title.isContentEditable) return;
+            const value = decodeFieldKey(label.dataset.labelValue || '');
+            const original = value || '（空欄）';
+            const shown = title.textContent.replace(/\u00a0/g, ' ').replace(/\r\n/g, '\n');
+            title.contentEditable = 'false';
+            title.classList.remove('is-editing');
+            title.textContent = shown.trim() ? shown : original;
+            rememberLabelLayout(label);
+        }
+
+        function bindCardResize(card, onFinish) {
+            const handle = card.querySelector('.note-resize-handle');
+            handle.addEventListener('pointerdown', event => {
+                event.preventDefault();
+                event.stopPropagation();
+                const startX = event.clientX;
+                const startY = event.clientY;
+                const startWidth = card.offsetWidth;
+                const startHeight = card.offsetHeight;
+                handle.setPointerCapture(event.pointerId);
+                const resize = move => { card.style.width = `${Math.max(MIN_NOTE_WIDTH, startWidth + move.clientX - startX)}px`; card.style.height = `${Math.max(MIN_NOTE_HEIGHT, startHeight + move.clientY - startY)}px`; };
+                const finish = move => { handle.releasePointerCapture(move.pointerId); handle.removeEventListener('pointermove', resize); handle.removeEventListener('pointerup', finish); handle.removeEventListener('pointercancel', finish); onFinish(); };
+                handle.addEventListener('pointermove', resize);
+                handle.addEventListener('pointerup', finish);
+                handle.addEventListener('pointercancel', finish);
+            });
+        }
+
+        function updateColorByOptions(keys) {
+            if (!keys.includes(colorByField)) colorByField = '';
+            colorBySelect.innerHTML = '<option value="">色分けしない</option>' + keys.map(key => `<option value="${encodeFieldKey(key)}" ${key === colorByField ? 'selected' : ''}>${escHtml(key)}</option>`).join('');
+            colorBySelect.value = colorByField ? encodeFieldKey(colorByField) : '';
+            categoryLabelInput.disabled = !colorByField;
+            categoryLabelInput.checked = showCategoryLabels;
+        }
+
+        function renderColorLegend(colorMap) {
+            const legend = document.getElementById('color-legend');
+            if (!colorMap || !colorByField) {
+                legend.className = 'mt-4 hidden';
+                legend.innerHTML = '';
+                return;
+            }
+            legend.className = 'mt-4 flex flex-wrap items-center gap-2';
+            legend.innerHTML = `<span class="text-xs font-bold text-gray-600">${escHtml(colorByField)}</span>` + [...colorMap.entries()].map(([value, color]) => `<span class="inline-flex max-w-xs items-center gap-2 rounded-full border border-gray-200 bg-white px-2 py-1 text-xs text-gray-700" title="${escAttr(value || '（空欄）')}"><span class="h-3 w-3 shrink-0 rounded-full border border-white shadow ring-1 ring-gray-300" style="background:${color}"></span><span class="truncate">${escHtml(value || '（空欄）')}</span></span>`).join('');
+        }
+
+        function fieldLooksLikeDate(key) {
+            return /日|時刻|日時|日付|時間|date|time/i.test(String(key));
+        }
+
+        function normalizeDateText(value) {
+            return String(value ?? '').trim().replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0)).replace(/／/g, '/').replace(/－/g, '-').replace(/．/g, '.').replace(/：/g, ':');
+        }
+
+        function validMonthDay(month, day) {
+            const monthNumber = Number(month);
+            const dayNumber = Number(day);
+            if (!Number.isInteger(monthNumber) || !Number.isInteger(dayNumber) || monthNumber < 1 || monthNumber > 12 || dayNumber < 1 || dayNumber > 31) return null;
+            const probe = new Date(Date.UTC(2024, monthNumber - 1, dayNumber));
+            if (probe.getUTCMonth() !== monthNumber - 1) return null;
+            return { month: monthNumber, day: dayNumber };
+        }
+
+        function excelSerialParts(serial) {
+            if (!Number.isFinite(serial) || serial < 20000 || serial > 80000) return null;
+            const utc = new Date(Math.round((Math.floor(serial) - 25569) * 86400000));
+            if (Number.isNaN(utc.getTime())) return null;
+            return { month: utc.getUTCMonth() + 1, day: utc.getUTCDate() };
+        }
+
+        function isDateSuffix(rest) {
+            const text = String(rest || '').trim().replace(/(?:^|\s|\(|（)[月火水木金土日](?:曜日)?(?:\)|）)?$/, '').trim();
+            if (!text) return true;
+            return /^(?:[T\s])?\d{1,2}[:時]\d{1,2}(?:[:分]\d{1,2})?[分秒]?(?:\d{1,2}秒)?(?:[.,]\d{1,3})?(?:\s*(?:Z|[+-]\d{2}:?\d{2}))?$/.test(text);
+        }
+
+        function parseCalendarParts(value, dateNamed) {
+            if (value instanceof Date && !Number.isNaN(value.getTime())) return { month: value.getMonth() + 1, day: value.getDate() };
+            if (typeof value === 'number' && Number.isFinite(value)) return dateNamed ? excelSerialParts(value) : null;
+            const text = normalizeDateText(value);
+            if (!text) return null;
+            if (dateNamed && /^-?\d+(?:\.\d+)?$/.test(text)) return excelSerialParts(Number(text));
+            const dated = text.match(/^(\d{4})\s*[\/.\-年]\s*(\d{1,2})\s*[\/.\-月]\s*(\d{1,2})\s*日?(.*)$/);
+            if (dated && isDateSuffix(dated[4])) {
+                const parts = validMonthDay(dated[2], dated[3]);
+                if (parts) return parts;
+            }
+            const monthDay = text.match(/^(\d{1,2})\s*月\s*(\d{1,2})\s*日(.*)$/);
+            if (monthDay && isDateSuffix(monthDay[3])) {
+                const parts = validMonthDay(monthDay[1], monthDay[2]);
+                if (parts) return parts;
+            }
+            if (dateNamed) {
+                const slash = text.match(/^(\d{1,2})\s*[\/\-]\s*(\d{1,2})(.*)$/);
+                if (slash && isDateSuffix(slash[3])) {
+                    const parts = validMonthDay(slash[1], slash[2]);
+                    if (parts) return parts;
+                }
+            }
+            return null;
+        }
+
+        function datePartsInField(rows, key) {
+            const named = fieldLooksLikeDate(key);
+            return rows.map(row => parseCalendarParts(row[key], named)).filter(Boolean);
+        }
+
+        function isDateField(key, rows) {
+            const samples = rows.map(row => row[key]).filter(value => value != null && String(value).trim() !== '');
+            if (!samples.length) return false;
+            const named = fieldLooksLikeDate(key);
+            const parsed = samples.filter(value => parseCalendarParts(value, named));
+            if (!parsed.length) return false;
+            if (named) return parsed.length / samples.length >= 0.5;
+            return samples.filter(value => parseCalendarParts(value, false)).length / samples.length >= 0.6;
+        }
+
+        function matchesFieldFilter(row, key, filter) {
+            if (filter == null || filter === '') return true;
+            if (typeof filter === 'object') {
+                const parts = parseCalendarParts(row[key], fieldLooksLikeDate(key));
+                if (!parts) return false;
+                if (filter.month && parts.month !== Number(filter.month)) return false;
+                if (filter.day && parts.day !== Number(filter.day)) return false;
+                return true;
+            }
+            return String(row[key] ?? '') === String(filter);
+        }
+
+        function rowMatchesActiveFilters(row) {
+            return selectedFields.every(key => matchesFieldFilter(row, key, activeFilters[key]));
+        }
+
+        function formatFilterSummary(key, value) {
+            if (value && typeof value === 'object') {
+                const label = `${value.month ? `${Number(value.month)}月` : ''}${value.day ? `${Number(value.day)}日` : ''}`;
+                return `${key}：${label}`;
+            }
+            return `${key}：${value || '（空欄）'}`;
+        }
+
+        function normalizeDateFilters(rows) {
+            Object.keys(activeFilters).forEach(key => {
+                if (!selectedFields.includes(key)) return;
+                const filter = activeFilters[key];
+                if (!isDateField(key, rows)) {
+                    if (filter && typeof filter === 'object') delete activeFilters[key];
+                    return;
+                }
+                let month = '';
+                let day = '';
+                if (typeof filter === 'string') {
+                    const parts = parseCalendarParts(filter, fieldLooksLikeDate(key));
+                    if (!parts) { delete activeFilters[key]; return; }
+                    month = String(parts.month);
+                    day = String(parts.day);
+                } else if (filter && typeof filter === 'object') {
+                    month = filter.month ? String(Number(filter.month)) : '';
+                    day = filter.day ? String(Number(filter.day)) : '';
+                    if (month === 'NaN') month = '';
+                    if (day === 'NaN') day = '';
+                }
+                const parts = datePartsInField(rows, key);
+                if (month && !parts.some(part => part.month === Number(month))) month = '';
+                if (day && !parts.some(part => part.day === Number(day) && (!month || part.month === Number(month)))) day = '';
+                if (!month && !day) delete activeFilters[key];
+                else activeFilters[key] = { ...(month ? { month } : {}), ...(day ? { day } : {}) };
+            });
+        }
+
+        function renderFilterControls(rows) {
+            normalizeDateFilters(rows);
+            const filterOptions = document.getElementById('filter-options');
+            const selectClass = 'rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-normal text-gray-800';
+            filterOptions.innerHTML = selectedFields.map(key => {
+                if (!isDateField(key, rows)) {
+                    const values = [...new Set(rows.map(row => String(row[key] ?? '')))];
+                    return `<label class="flex flex-col gap-1 text-xs font-medium text-gray-600">${escHtml(key)}で絞り込み<select data-filter-key="${encodeFieldKey(key)}" class="filter-select ${selectClass}"><option value="">すべて</option>${values.map(value => `<option value="${encodeFieldKey(value)}" ${activeFilters[key] === value ? 'selected' : ''}>${escHtml(value || '（空欄）')}</option>`).join('')}</select></label>`;
+                }
+                const filter = activeFilters[key] && typeof activeFilters[key] === 'object' ? activeFilters[key] : {};
+                const parts = datePartsInField(rows, key);
+                const months = [...new Set(parts.map(part => part.month))].sort((a, b) => a - b);
+                const days = [...new Set(parts.filter(part => !filter.month || part.month === Number(filter.month)).map(part => part.day))].sort((a, b) => a - b);
+                return `<div data-date-filter-group class="flex flex-col gap-1 text-xs font-medium text-gray-600"><span>${escHtml(key)}で絞り込み</span><div class="flex gap-2"><label class="flex min-w-0 flex-1 flex-col gap-1">月<select data-date-filter="month" data-filter-key="${encodeFieldKey(key)}" class="${selectClass}"><option value="">すべて</option>${months.map(month => `<option value="${month}" ${String(filter.month) === String(month) ? 'selected' : ''}>${month}月</option>`).join('')}</select></label><label class="flex min-w-0 flex-1 flex-col gap-1">日<select data-date-filter="day" data-filter-key="${encodeFieldKey(key)}" class="${selectClass}"><option value="">すべて</option>${days.map(day => `<option value="${day}" ${String(filter.day) === String(day) ? 'selected' : ''}>${day}日</option>`).join('')}</select></label></div></div>`;
+            }).join('');
+            filterOptions.querySelectorAll('.filter-select').forEach(select => select.addEventListener('change', () => {
+                const key = decodeFieldKey(select.getAttribute('data-filter-key'));
+                if (select.value) activeFilters[key] = decodeFieldKey(select.value);
+                else delete activeFilters[key];
+                renderNotes(currentData, { preserveFields: true });
+            }));
+            filterOptions.querySelectorAll('[data-date-filter]').forEach(select => select.addEventListener('change', () => {
+                const group = select.closest('[data-date-filter-group]');
+                const key = decodeFieldKey(select.getAttribute('data-filter-key'));
+                const month = group.querySelector('[data-date-filter="month"]').value;
+                let day = group.querySelector('[data-date-filter="day"]').value;
+                const parts = datePartsInField(currentData, key);
+                if (day && month && !parts.some(part => part.month === Number(month) && part.day === Number(day))) day = '';
+                if (!month && !day) delete activeFilters[key];
+                else activeFilters[key] = { ...(month ? { month } : {}), ...(day ? { day } : {}) };
+                renderNotes(currentData, { preserveFields: true });
+            }));
+        }
+
+        function renderNotes(data, renderOptions = {}) {
             board.innerHTML = '';
             currentData = data;
             updateGroupSaveFields(Object.keys(data[0] || {}));
@@ -376,65 +987,72 @@
                 document.getElementById('count-label').textContent = '0 / 0 件の付箋';
                 document.getElementById('filter-summary-heading').textContent = noteSearchQuery || Object.keys(activeFilters).length ? '保存時の絞り込み条件を復元中' : '絞り込み条件：なし（すべての付箋を表示）';
                 document.getElementById('filter-summary-text').textContent = '0件の付箋を表示中';
+                updateColorByOptions([]);
+                renderColorLegend(null);
                 return;
             }
-            const keys = Object.keys(data[0]);
+            const keys = [...new Set(data.flatMap(row => Object.keys(row || {})))];
             selectedFields = selectedFields.filter(key => keys.includes(key));
-            if(!selectedFields.length) selectedFields = keys.slice(0, Math.min(2, keys.length));
+            if(!selectedFields.length && !renderOptions.preserveFields) selectedFields = keys.slice(0, Math.min(2, keys.length));
             activeFilters = Object.fromEntries(Object.entries(activeFilters).filter(([key]) => selectedFields.includes(key)));
+            updateColorByOptions(keys);
+            showFieldNamesInput.checked = showFieldNames;
 
             const options = document.getElementById('field-options');
-            options.innerHTML = keys.map((key, i) => `<div class="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm"><label class="inline-flex items-center gap-2 cursor-pointer"><input type="checkbox" value="${escHtml(key)}" ${selectedFields.includes(key) ? 'checked' : ''} class="field-checkbox accent-amber-600"><span>${escHtml(key)}</span></label><label class="mt-2 flex items-center gap-2 text-xs text-gray-500" for="truncate-${i}">省略文字列<input id="truncate-${i}" type="text" value="${escHtml(truncateMarkers[key] ?? '')}" data-truncate-key="${escHtml(key)}" class="truncate-field w-16 rounded border border-gray-200 px-2 py-1 text-sm text-gray-800"></label></div>`).join('');
+            if (!renderOptions.preserveFields || !options.querySelector('.field-checkbox')) {
+            options.innerHTML = keys.map((key, i) => `<div class="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm"><label class="inline-flex items-center gap-2 cursor-pointer"><input type="checkbox" value="${encodeFieldKey(key)}" ${selectedFields.includes(key) ? 'checked' : ''} class="field-checkbox accent-amber-600"><span>${escHtml(key)}</span></label><label class="mt-2 flex items-center gap-2 text-xs text-gray-500" for="truncate-${i}">省略文字列<input id="truncate-${i}" type="text" value="${escAttr(truncateMarkers[key] ?? '')}" data-truncate-key="${encodeFieldKey(key)}" class="truncate-field w-16 rounded border border-gray-200 px-2 py-1 text-sm text-gray-800"></label></div>`).join('');
             options.querySelectorAll('.field-checkbox').forEach(box => box.addEventListener('change', () => {
-                selectedFields = [...options.querySelectorAll('.field-checkbox:checked')].map(input => input.value);
-                renderNotes(currentData);
+                selectedFields = [...options.querySelectorAll('.field-checkbox:checked')].map(input => decodeFieldKey(input.value));
+                renderNotes(currentData, { preserveFields: true });
             }));
             options.querySelectorAll('.truncate-field').forEach(input => {
                 let composing = false;
                 input.addEventListener('compositionstart', () => { composing = true; });
                 input.addEventListener('compositionend', () => {
                     composing = false;
-                    truncateMarkers[input.dataset.truncateKey] = input.value;
-                    renderNotes(currentData);
+                    truncateMarkers[decodeFieldKey(input.getAttribute('data-truncate-key'))] = input.value;
+                    renderNotes(currentData, { preserveFields: true });
                 });
                 input.addEventListener('input', () => {
-                    truncateMarkers[input.dataset.truncateKey] = input.value;
-                    if (!composing) renderNotes(currentData);
+                    truncateMarkers[decodeFieldKey(input.getAttribute('data-truncate-key'))] = input.value;
+                    if (!composing) renderNotes(currentData, { preserveFields: true });
                 });
             });
+            }
 
-            const filterOptions = document.getElementById('filter-options');
-            filterOptions.innerHTML = selectedFields.map(key => {
-                const values = [...new Set(data.map(row => String(row[key] ?? '')))];
-                return `<label class="flex flex-col gap-1 text-xs font-medium text-gray-600">${escHtml(key)}で絞り込み<select data-filter-key="${escHtml(key)}" class="filter-select rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-normal text-gray-800"><option value="">すべて</option>${values.map(value => `<option value="${escHtml(value)}" ${activeFilters[key] === value ? 'selected' : ''}>${escHtml(value || '（空欄）')}</option>`).join('')}</select></label>`;
-            }).join('');
-            filterOptions.querySelectorAll('.filter-select').forEach(select => select.addEventListener('change', () => {
-                const key = select.dataset.filterKey;
-                if (select.value) activeFilters[key] = select.value;
-                else delete activeFilters[key];
-                renderNotes(currentData);
-            }));
+            renderFilterControls(data);
 
             const filteredData = data.filter(row => {
-                const matchesFilters = selectedFields.every(key => !activeFilters[key] || String(row[key] ?? '') === activeFilters[key]);
                 const searchableText = Object.values(row).map(value => String(value ?? '')).join(' ').toLowerCase();
-                return matchesFilters && (!noteSearchQuery || searchableText.includes(noteSearchQuery));
+                return rowMatchesActiveFilters(row) && (!noteSearchQuery || searchableText.includes(noteSearchQuery));
             });
-            const summaryParts = Object.entries(activeFilters).map(([key, value]) => `${key}：${value || '（空欄）'}`);
+            const summaryParts = Object.entries(activeFilters).map(([key, value]) => formatFilterSummary(key, value));
             if (noteSearchQuery) summaryParts.push(`検索：${noteSearchQuery}`);
             document.getElementById('filter-summary-heading').textContent = summaryParts.length ? summaryParts.join(' ／ ') : '絞り込み条件：なし（すべての付箋を表示）';
             document.getElementById('filter-summary-text').textContent = `${filteredData.length}件の付箋を表示中`;
-            filteredData.forEach((row, i) => {
+            const colorMap = colorByField ? viewpointColorMap(filteredData, colorByField) : null;
+            renderColorLegend(colorMap);
+            const groups = showCategoryLabels && colorMap
+                ? [...colorMap.entries()].map(([value, color]) => ({ value, color, rows: filteredData.filter(row => String(row[colorByField] ?? '') === value) })).filter(group => group.rows.length)
+                : [{ value: null, color: '', rows: filteredData }];
+            groups.forEach(group => {
+                if (group.value != null) board.appendChild(createCategoryLabel(group.value, group.color));
+                group.rows.forEach(row => {
                 const note = document.createElement('div');
                 const rot = (Math.random() - 0.5) * 4;
-                const initialColor = colors[Math.floor(Math.random() * colors.length)];
+                const initialColor = colorMap ? colorMap.get(String(row[colorByField] ?? '')) : colors[Math.floor(Math.random() * colors.length)];
                 note.className = 'note self-start h-fit p-5 rounded-lg shadow-md';
                 note.style.cssText = `--rot:${rot}deg; --x:0px; --y:0px; background:${initialColor}`;
                 const savedSize = noteSizes.get(row);
                 if (savedSize) { note.style.width = `${savedSize.width}px`; note.style.height = `${savedSize.height}px`; }
                 note.innerHTML = `<div class="note-resize-handle" role="slider" tabindex="0" aria-label="付箋のサイズを変更" aria-valuemin="${MIN_NOTE_WIDTH}" aria-valuemax="1200"></div>` + note.innerHTML;
                 note.addEventListener('pointerdown', startDragging);
-                note.innerHTML = `<div class="note-resize-handle" role="slider" tabindex="0" aria-label="付箋のサイズを変更"></div><div class="mb-3 flex justify-end"><div class="note-color-palette flex gap-1" role="group" aria-label="この付箋の色を変更">${colors.map(color => `<button type="button" class="h-3 w-3 rounded-full border border-white shadow ring-1 ring-gray-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-amber-500" style="background:${color}" data-note-color="${color}" aria-label="${color}"></button>`).join('')}</div></div>${selectedFields.map((key, fieldIndex) => `<p class="${fieldIndex === 0 ? 'text-gray-800 text-base font-medium leading-relaxed mb-2' : 'text-gray-800 text-base font-medium leading-relaxed'}"><span class="font-bold text-xs text-gray-600 tracking-wide">${escHtml(truncateText(key, key))}:</span> <span class="font-medium">${highlightText(String(row[key] ?? ''))}</span></p>`).join('')}`;
+                const fieldsHtml = selectedFields.map((key, fieldIndex) => {
+                    const textClass = fieldIndex === 0 ? 'text-gray-800 text-base font-medium leading-relaxed mb-2' : 'text-gray-800 text-base font-medium leading-relaxed';
+                    const label = showFieldNames ? `<span class="font-bold text-xs text-gray-600 tracking-wide">${escHtml(truncateText(key, key))}:</span> ` : '';
+                    return `<p class="${textClass}">${label}<span class="font-medium">${highlightText(String(row[key] ?? ''))}</span></p>`;
+                }).join('');
+                note.innerHTML = `<div class="note-resize-handle" role="slider" tabindex="0" aria-label="付箋のサイズを変更"></div><div class="mb-3 flex justify-end"><div class="note-color-palette flex gap-1" role="group" aria-label="この付箋の色を変更">${colors.map(color => `<button type="button" class="h-3 w-3 rounded-full border border-white shadow ring-1 ring-gray-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-amber-500" style="background:${color}" data-note-color="${color}" aria-label="${color}"></button>`).join('')}</div></div>${fieldsHtml}`;
                 const resizeHandle = note.querySelector('.note-resize-handle');
                 resizeHandle.addEventListener('pointerdown', e => {
                     e.preventDefault(); e.stopPropagation();
@@ -449,7 +1067,9 @@
                     const button = e.target.closest('[data-note-color]');
                     if (button) note.style.background = button.dataset.noteColor;
                 });
+                noteByRow.set(row, note);
                 board.appendChild(note);
+                });
             });
 
             document.getElementById('controls').classList.remove('hidden');
@@ -476,23 +1096,104 @@
                 note.removeEventListener('pointermove', move);
                 note.removeEventListener('pointerup', stop);
                 note.removeEventListener('pointercancel', stop);
+                if (note.classList.contains('board-label')) rememberLabelLayout(note);
             };
             note.addEventListener('pointermove', move);
             note.addEventListener('pointerup', stop);
             note.addEventListener('pointercancel', stop);
         }
 
+        function createCategoryLabel(value, noteColor) {
+            const saved = labelStates.get(labelStateKey(value)) || {};
+            const label = document.createElement('div');
+            label.className = 'board-label self-start h-fit rounded-lg px-4 py-3 font-bold leading-snug shadow-md';
+            label.dataset.labelValue = encodeFieldKey(value);
+            label.style.setProperty('--rot', '0deg');
+            label.style.setProperty('--x', saved.x || '0px');
+            label.style.setProperty('--y', saved.y || '0px');
+            if (saved.width >= MIN_NOTE_WIDTH && saved.height >= MIN_NOTE_HEIGHT) {
+                label.style.width = `${saved.width}px`;
+                label.style.height = `${saved.height}px`;
+            } else {
+                label.classList.add('is-full-width');
+            }
+            const palette = [...colors, '#FFFFFF'].map(color => `<button type="button" class="h-3 w-3 rounded-full border shadow ring-1 ring-gray-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-amber-500" style="background:${color};border-color:${color.toUpperCase() === '#FFFFFF' ? '#a1a1aa' : '#ffffff'}" data-note-color="${color}" aria-label="${color.toUpperCase() === '#FFFFFF' ? '白' : color}"></button>`).join('');
+            const titleText = typeof saved.text === 'string' && saved.text.trim() ? saved.text : (value || '（空欄）');
+            label.innerHTML = `<div class="note-resize-handle" role="slider" tabindex="0" aria-label="分類ラベルのサイズを変更"></div><div class="label-toolbar mb-2 flex items-center justify-end gap-2"><div class="label-font-controls gap-1" role="group" aria-label="分類ラベルの文字サイズ"><button type="button" data-font-step="-8" class="rounded border border-current/30 bg-white/70 px-1.5 py-0.5 text-xs font-bold text-gray-700" aria-label="文字を小さく">小</button><button type="button" data-font-step="8" class="rounded border border-current/30 bg-white/70 px-1.5 py-0.5 text-xs font-bold text-gray-700" aria-label="文字を大きく">大</button></div><div class="note-color-palette flex gap-1" role="group" aria-label="この分類ラベルの色を変更">${palette}</div></div><p class="flex items-start gap-2"><span class="label-swatch" aria-hidden="true"></span><span class="label-title" title="ダブルクリックで編集"></span></p>`;
+            const title = label.querySelector('.label-title');
+            title.textContent = titleText;
+            applyHeadingColor(label, saved.color || noteColor);
+            applyLabelFontSize(label, saved.fontSize || LABEL_FONT_DEFAULT);
+            label.addEventListener('pointerdown', startDragging);
+            bindCardResize(label, () => rememberLabelLayout(label));
+            title.addEventListener('pointerdown', event => event.stopPropagation());
+            title.addEventListener('click', event => {
+                event.stopPropagation();
+                if (title.isContentEditable) return;
+                const willOpen = !label.classList.contains('is-font-open');
+                document.querySelectorAll('.board-label.is-font-open').forEach(openLabel => openLabel.classList.remove('is-font-open'));
+                if (willOpen) label.classList.add('is-font-open');
+            });
+            title.addEventListener('dblclick', event => {
+                event.preventDefault();
+                event.stopPropagation();
+                beginLabelEdit(label, title);
+            });
+            title.addEventListener('keydown', event => {
+                if (!title.isContentEditable) return;
+                if (event.key === 'Escape') {
+                    event.preventDefault();
+                    title.blur();
+                    return;
+                }
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    insertPlainText('\n');
+                }
+            });
+            title.addEventListener('paste', event => {
+                if (!title.isContentEditable) return;
+                event.preventDefault();
+                insertPlainText(event.clipboardData?.getData('text/plain') || '');
+            });
+            title.addEventListener('blur', () => finishLabelEdit(label, title));
+            label.querySelector('.label-font-controls').addEventListener('pointerdown', event => event.stopPropagation());
+            label.querySelector('.label-font-controls').addEventListener('click', event => {
+                const button = event.target.closest('[data-font-step]');
+                if (!button) return;
+                applyLabelFontSize(label, Number(label.dataset.fontSize) + Number(button.dataset.fontStep));
+                rememberLabelLayout(label);
+            });
+            label.querySelector('.note-color-palette').addEventListener('pointerdown', event => event.stopPropagation());
+            label.querySelector('.note-color-palette').addEventListener('click', event => {
+                const button = event.target.closest('[data-note-color]');
+                if (!button) return;
+                applyHeadingColor(label, button.dataset.noteColor);
+                rememberLabelLayout(label);
+            });
+            return label;
+        }
+
         function randomizeNoteColors() {
+            if (colorByField) {
+                colorByOffset += 1;
+                renderNotes(currentData, { preserveFields: true });
+                return;
+            }
             board.querySelectorAll('.note').forEach(note => {
                 note.style.background = colors[Math.floor(Math.random() * colors.length)];
             });
         }
 
         function getBoardText() {
-            return [...board.querySelectorAll('.note')].map((note, index) => {
-                const lines = [...note.querySelectorAll('p')].map(p => p.textContent.trim());
-                return `付箋 ${index + 1}\n${lines.join('\n')}`;
-            }).join('\n\n');
+            let noteIndex = 0;
+            return [...board.children].map(element => {
+                if (element.classList.contains('board-label')) return `分類 ${element.textContent.trim()}`;
+                if (!element.classList.contains('note')) return '';
+                noteIndex += 1;
+                const lines = [...element.querySelectorAll('p')].map(p => p.textContent.trim());
+                return `付箋 ${noteIndex}\n${lines.join('\n')}`;
+            }).filter(Boolean).join('\n\n');
         }
 
         let previewAction = '';
@@ -570,12 +1271,28 @@
             activeFilters = {};
             truncateMarkers = {};
             noteSearchQuery = '';
+            colorByField = '';
+            showFieldNames = true;
+            showCategoryLabels = false;
+            colorByOffset = 0;
+            labelStates.clear();
+            applyBoardImage('');
+            applyPinImage('');
+            applyPinStyle('red');
             searchInput.value = '';
+            colorBySelect.innerHTML = '<option value="">色分けしない</option>';
+            showFieldNamesInput.checked = true;
+            categoryLabelInput.checked = false;
+            categoryLabelInput.disabled = true;
+            renderColorLegend(null);
             document.getElementById('filter-summary-heading').textContent = '';
             document.getElementById('filter-summary-text').textContent = 'ファイルを読み込むと、絞り込み条件がここに表示されます';
         }
 
         function escHtml(s) { const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+        function escAttr(s) { return String(s ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
+        function encodeFieldKey(s) { return encodeURIComponent(String(s)); }
+        function decodeFieldKey(s) { try { return decodeURIComponent(String(s ?? '')); } catch (error) { return String(s ?? ''); } }
 
         function highlightText(value) {
             const escaped = escHtml(String(value ?? ''));
@@ -584,6 +1301,24 @@
             return escaped.replace(new RegExp(`(${escapedQuery})`, 'gi'), '<mark class="rounded bg-amber-300 px-0.5 text-amber-950">$1</mark>');
         }
 
+        function lockPrintSizes() {
+            document.querySelectorAll('#board .note, #board .board-label').forEach(card => {
+                card.style.setProperty('--print-w', `${card.offsetWidth}px`);
+                card.style.setProperty('--print-h', `${card.offsetHeight}px`);
+            });
+            document.getElementById('board').getBoundingClientRect();
+        }
+
+        function unlockPrintSizes() {
+            document.querySelectorAll('#board .note, #board .board-label').forEach(card => {
+                card.style.removeProperty('--print-w');
+                card.style.removeProperty('--print-h');
+            });
+        }
+
+        window.addEventListener('beforeprint', lockPrintSizes);
+        window.addEventListener('afterprint', unlockPrintSizes);
+        applyPinStyle('red');
         renderNotes(demoData);
     </script>
  
